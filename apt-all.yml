@@ -31,22 +31,27 @@
         - arc-theme
         - aspell
         - bash-completion
+        - bc
         - build-essential
         - cmake
         - cmatrix
         - cmus
         - cowsay
+        - cups
+        - cups-pdf
         - curl
         - ed
         - exa
         - flatpak
         - fortunes-off
+        - foomatic-db
         - gimp
         - git
         - gdebi
         - gparted
         - gpg
         - hardinfo
+        - hplip
         - htop
         - hunspell
         - hwinfo
@@ -83,6 +88,7 @@
         - papirus-icon-theme
         - physlock
         - powertop
+        - printer-driver-hpcups
         - psmisc
         - python3
         - python3-pip
