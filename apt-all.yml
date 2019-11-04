@@ -55,6 +55,7 @@
         - htop
         - hunspell
         - hwinfo
+        - imagemagick
         - inkscape
         - intel-microcode
         - inxi
@@ -106,9 +107,9 @@
         - sct
         - shellcheck
         - silversearcher-ag
-        - snapd
         - sl
         - slop
+        - snapd
         - spacefm
         - stterm
         - suckless-tools
@@ -122,8 +123,9 @@
         - tmux
         - tree
         - vlc
-        - wmctrl
         - wget
+        - whois
+        - wmctrl
         - wireshark
         - xautolock
         - xbacklight
