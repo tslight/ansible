@@ -1,0 +1,21 @@
+- name: Clone git repositories
+  hosts: all
+  become: no
+  tasks:
+    - name: Clone bin repo
+      git:
+        repo: git@gitlab.com:tspub/bin.git
+        version: master
+        dest: "{{ansible_env.HOME}}/src/tspub/bin"
+        accept_hostkey: yes
+    - name: Clone lazygit repo
+      git:
+        repo: git@gitlab.com:tspub/js/lazygit.git
+        version: master
+        dest: "{{ansible_env.HOME}}/src/tspub/js/lazygit"
+        accept_hostkey: yes
+    - name: Symlink bin repo
+      file:
+        src: "{{ansible_env.HOME}}/src/tspub/bin"
+        dest: "{{ansible_env.HOME}}/bin"
+        state: link
