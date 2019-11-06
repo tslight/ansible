@@ -70,6 +70,7 @@
         - lilyterm
         - lshw
         - maim
+        - midori
         - mlocate
         - mpv
         - mupdf
@@ -113,6 +114,7 @@
         - spacefm
         - stterm
         - suckless-tools
+        - surf
         - sxiv
         - terminator
         - texlive
@@ -123,6 +125,8 @@
         - tmux
         - tree
         - vlc
+        - w3m
+        - w3m-img
         - wget
         - whois
         - wmctrl
