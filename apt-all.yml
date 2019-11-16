@@ -95,6 +95,8 @@
         - python3
         - python3-pip
         - qbittorrent
+        - qemu-utils
+        - qemu-system
         - ranger
         - ratpoison
         - remmina
