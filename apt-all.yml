@@ -95,6 +95,7 @@
         - python3
         - python3-pip
         - qbittorrent
+        - qemu-kvm
         - qemu-utils
         - qemu-system
         - ranger
@@ -126,6 +127,7 @@
         - tlp
         - tmux
         - tree
+        - virt-manager
         - vlc
         - w3m
         - w3m-img
