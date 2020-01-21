@@ -25,7 +25,7 @@
       pkg:
         - acpi
         - alttab
-        - ansible
+        # - ansible
         - aptitude
         - arandr
         - arc-theme
@@ -41,18 +41,18 @@
         - cups-pdf
         - curl
         - ed
-        - exa
+        # - exa
         - flatpak
         - fortunes-off
         - foomatic-db
         - gimp
-        - git
+        # - git
         - gdebi
         - gparted
         - gpg
         - hardinfo
         - hplip
-        - htop
+        # - htop
         - hunspell
         - hwinfo
         - imagemagick
@@ -61,7 +61,7 @@
         - inxi
         - ipython3
         - ispell
-        - jq
+        # - jq
         - jwm
         - libimage-exiftool-perl
         - libreoffice
@@ -72,12 +72,12 @@
         - maim
         - midori
         - mlocate
-        - mpv
+        # - mpv
         - mupdf
-        - ncdu
-        - neofetch
+        # - ncdu
+        # - neofetch
         - ngrep
-        - neovim
+        # - neovim
         - net-tools
         - network-manager-fortisslvpn
         - network-manager-openconnect
@@ -88,7 +88,7 @@
         - openfortivpn
         - openjdk-11-jdk
         - papirus-icon-theme
-        - peek
+        # - peek
         - physlock
         - powertop
         - printer-driver-hpcups
@@ -99,7 +99,7 @@
         - qemu-kvm
         - qemu-utils
         - qemu-system
-        - ranger
+        # - ranger
         - ratpoison
         - remmina
         - rlwrap
@@ -127,7 +127,7 @@
         - thermald
         - tint2
         - tlp
-        - tmux
+        # - tmux
         - tree
         - virt-manager
         - vlc
