@@ -88,6 +88,7 @@
         - openfortivpn
         - openjdk-11-jdk
         - papirus-icon-theme
+        - peek
         - physlock
         - powertop
         - printer-driver-hpcups
@@ -111,6 +112,7 @@
         - sct
         - shellcheck
         - silversearcher-ag
+        - simplescreenrecorder
         - sl
         - slop
         - snapd
@@ -129,6 +131,7 @@
         - tree
         - virt-manager
         - vlc
+        - vokoscreen
         - w3m
         - w3m-img
         - wget
