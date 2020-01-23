@@ -1,4 +1,4 @@
-# - import_playbook: apt-all.yml
+- import_playbook: apt-all.yml
 # - import_playbook: apt-az.yml
 - import_playbook: apt-azds.yml
 # - import_playbook: apt-docker.yml
