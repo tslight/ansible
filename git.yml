@@ -20,6 +20,12 @@
         version: master
         dest: "{{ansible_env.HOME}}/src/tspub/devops/nix"
         accept_hostkey: yes
+    - name: Clone ansible repo
+      git:
+        repo: git@gitlab.com:tspub/devops/ansible.git
+        version: master
+        dest: "{{ansible_env.HOME}}/src/tspub/devops/ansible"
+        accept_hostkey: yes
     - name: Clone lazygit repo
       git:
         repo: git@gitlab.com:tspub/js/lazygit.git
