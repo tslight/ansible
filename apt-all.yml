@@ -12,9 +12,6 @@
         - vim-common
         - vim-runtime
         - plymouth
-        - curl # installed with nix
-        - rsync # installed with nix
-        - git # installed with nix
       state: absent
       purge: yes
       autoremove: yes
@@ -30,11 +27,13 @@
         - aptitude
         - cups
         - cups-pdf
+        - curl
         - ed
         - flatpak
         - fortunes-off
         - foomatic-db
         - gdebi
+        - git
         - hplip
         - intel-microcode
         - network-manager-fortisslvpn
@@ -48,6 +47,7 @@
         - qemu-kvm
         - qemu-utils
         - qemu-system
+        - rsync
         - snapd
         - thermald
         - tlp
