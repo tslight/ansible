@@ -6,11 +6,12 @@
   - name: Removing packages
     apt:
       pkg:
+        - sddm
         - lightdm
         - nano
-        - vim-tiny
-        - vim-common
-        - vim-runtime
+        # - vim-tiny
+        # - vim-common
+        # - vim-runtime
         - plymouth
       state: absent
       purge: yes
@@ -25,6 +26,7 @@
       pkg:
         - acpi
         - aptitude
+        - build-essential
         - cups
         - cups-pdf
         - curl
@@ -36,6 +38,8 @@
         - git
         - hplip
         - intel-microcode
+        - mg
+        - network-manager
         - network-manager-fortisslvpn
         - network-manager-openconnect
         - network-manager-fortisslvpn-gnome
