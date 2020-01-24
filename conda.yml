@@ -1,5 +1,6 @@
 - name: Install Miniconda
   hosts: localhost
+  become: no
   vars:
     url: 'https://repo.anaconda.com/miniconda'
     installer: 'Miniconda3-latest-Linux-x86_64.sh'

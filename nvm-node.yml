@@ -1,5 +1,6 @@
 - name: Install latest NodeJS using nvm
   hosts: all
+  become: no
   vars:
     number: "{{version | default('0.34.0')}}"
     ver: "{{'v' + number}}"
