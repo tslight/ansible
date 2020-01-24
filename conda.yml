@@ -18,10 +18,10 @@
     shell: |
       bash /tmp/Miniconda3-latest-Linux-x86_64.sh -b -p {{installto}}
     when: miniconda.stat.exists == false
-  - name: Update Existing Install
-    shell: |
-      bash /tmp/Miniconda3-latest-Linux-x86_64.sh -b -u -p {{installto}}
-    when: miniconda.stat.exists and miniconda.stat.isdir
+  # - name: Update Existing Install
+  #   shell: |
+  #     bash /tmp/Miniconda3-latest-Linux-x86_64.sh -b -u -p {{installto}}
+  #   when: miniconda.stat.exists and miniconda.stat.isdir
   - name: Run conda init
     shell: |
       {{installto}}/bin/conda init
