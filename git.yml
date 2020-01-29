@@ -40,7 +40,7 @@
         accept_hostkey: yes
     - name: Symlink ansible repo to $HOME/ansible
       file:
-        src: "{{ansible_env.HOME}}/src/tspub/ansible"
+        src: "{{ansible_env.HOME}}/src/tspub/devops/ansible"
         dest: "{{ansible_env.HOME}}/ansible"
         state: link
         force: yes
