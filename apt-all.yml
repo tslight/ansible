@@ -17,12 +17,10 @@
       purge: yes
       autoremove: yes
       autoclean: yes
-  - name: Upgrade all packages
-    apt:
-      upgrade: dist
-      update_cache: yes
   - name: Installing packages
     apt:
+      default_release: "{{ansible_distribution_release + '-backports'}}"
+      update_cache: yes
       pkg:
         - acpi
         - aptitude
@@ -31,7 +29,7 @@
         - cups-pdf
         - curl
         - ed
-        - flatpak
+        # - flatpak
         - fortunes-off
         - foomatic-db
         - gdebi
@@ -52,6 +50,7 @@
         - qemu-utils
         - qemu-system
         - rsync
+        - slock
         - snapd
         - thermald
         - tlp
