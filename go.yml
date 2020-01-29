@@ -2,7 +2,7 @@
   hosts: localhost
   become: yes
   vars:
-    number: "{{version | default('1.13')}}"
+    number: "{{version | default('1.12.7')}}"
     requested: "{{'go' + number }}"
     go_path: /usr/local
   tasks:

@@ -28,3 +28,9 @@
     shell: ln -fs /opt/mssql-tools/bin/* /usr/local/bin
     args:
       warn: false
+  - name: Add en_US.UTF-8 locale to /etc/locale.gen
+    lineinfile:
+      dest: /etc/locale.gen
+      line: en_US.UTF-8 UTF-8
+  - name: Execute locale-gen to regenerate new locales
+    shell: locale-gen
