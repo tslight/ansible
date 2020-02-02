@@ -32,6 +32,19 @@
         version: master
         dest: "{{ansible_env.HOME}}/src/tspub/js/lazygit"
         accept_hostkey: yes
+    - name: Clone personal notes repo
+      git:
+        repo: git@gitlab.com:tsprv/org/personal.git
+        version: master
+        dest: "{{ansible_env.HOME}}/src/tsprv/org/personal"
+        accept_hostkey: yes
+    - name: Clone work notes repo
+      git:
+        repo: git@gitlab.com:tsprv/org/work.git
+        version: master
+        dest: "{{ansible_env.HOME}}/src/tsprv/org/work"
+        accept_hostkey: yes
+
     - name: Symlink ansible repo to $HOME/ansible
       file:
         src: "{{ansible_env.HOME}}/src/tspub/devops/ansible"
@@ -44,10 +57,16 @@
         dest: "{{ansible_env.HOME}}/bin"
         state: link
         force: yes
-    - name: Symlink etc repo to $HOME/etc
+    - name: Symlink etc group to $HOME/etc
       file:
         src: "{{ansible_env.HOME}}/src/tspub/etc"
         dest: "{{ansible_env.HOME}}/etc"
+        state: link
+        force: yes
+    - name: Symlink org group to $HOME/org
+      file:
+        src: "{{ansible_env.HOME}}/src/tsprv/org"
+        dest: "{{ansible_env.HOME}}/org"
         state: link
         force: yes
     - name: Symlink nix repo to $HOME/nix
