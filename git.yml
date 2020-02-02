@@ -32,12 +32,6 @@
         version: master
         dest: "{{ansible_env.HOME}}/src/tspub/js/lazygit"
         accept_hostkey: yes
-    - name: Clone StumpWM repo
-      git:
-        repo: git@gitlab.com:tspub/etc/stumpwm.git
-        version: master
-        dest: "{{ansible_env.HOME}}/src/tspub/etc/stumpwm"
-        accept_hostkey: yes
     - name: Symlink ansible repo to $HOME/ansible
       file:
         src: "{{ansible_env.HOME}}/src/tspub/devops/ansible"
@@ -56,12 +50,6 @@
         dest: "{{ansible_env.HOME}}/etc"
         state: link
         force: yes
-    - name: Symlink emacs repo to $HOME/.emacs.d
-      file:
-        src: "{{ansible_env.HOME}}/src/tspub/etc/emacs"
-        dest: "{{ansible_env.HOME}}/.emacs.d"
-        state: link
-        force: yes
     - name: Symlink nix repo to $HOME/nix
       file:
         src: "{{ansible_env.HOME}}/src/tspub/devops/nix"
@@ -72,11 +60,5 @@
       file:
         src: "{{ansible_env.HOME}}/src/tspub/devops/nix/pkgs"
         dest: "{{ansible_env.HOME}}/.config/nixpkgs"
-        state: link
-        force: yes
-    - name: Symlink StumpWM repo to $HOME/.stumpwm.d
-      file:
-        src: "{{ansible_env.HOME}}/src/tspub/etc/stumpwm"
-        dest: "{{ansible_env.HOME}}/.stumpwm.d"
         state: link
         force: yes
