@@ -17,6 +17,15 @@
       purge: yes
       autoremove: yes
       autoclean: yes
+  - name: Adding backports repository
+    apt_repository:
+      repo: "{{'deb http://deb.debian.org/debian/ '+ansible_distribution_release+'-backports main contrib non-free'}}"
+      repo: "{{'deb-src http://deb.debian.org/debian/ '+ansible_distribution_release+'-backports main contrib non-free'}}"
+      state: present
+      update_cache: yes
+  - name: Update all packages to the latest version
+    apt:
+      upgrade: dist
   - name: Installing packages
     apt:
       default_release: "{{ansible_distribution_release + '-backports'}}"
@@ -156,4 +165,4 @@
         - zathura
         - zenmap
         - zsh
-      state: present
+      state: latest
