@@ -24,7 +24,12 @@
       update_cache: yes
   - name: Update all packages to the latest version
     apt:
+      default_release: "{{ansible_distribution_release + '-backports'}}"
       upgrade: dist
+  - name: Cleanup unused packages and caches
+    apt:
+      autoremove: yes
+      autoclean: yes
   - name: Installing packages
     apt:
       default_release: "{{ansible_distribution_release + '-backports'}}"
