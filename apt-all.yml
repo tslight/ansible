@@ -37,6 +37,7 @@
         - cmake
         - cmatrix
         - cmus
+        - clipit
         - cowsay
         - cups
         - cups-pdf
@@ -82,6 +83,7 @@
         - neovim
         - net-tools
         - network-manager-fortisslvpn
+        - network-manager-gnome # for nm-applet
         - network-manager-openconnect
         - network-manager-fortisslvpn-gnome
         - network-manager-openconnect-gnome
