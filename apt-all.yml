@@ -43,7 +43,7 @@
         - curl
         - ed
         - exa
-        # - flatpak
+        - flatpak
         - fortunes-off
         - foomatic-db
         - gimp
