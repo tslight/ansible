@@ -20,7 +20,6 @@
   - name: Adding backports repository
     apt_repository:
       repo: "{{'deb http://deb.debian.org/debian/ '+ansible_distribution_release+'-backports main contrib non-free'}}"
-      repo: "{{'deb-src http://deb.debian.org/debian/ '+ansible_distribution_release+'-backports main contrib non-free'}}"
       state: present
       update_cache: yes
   - name: Update all packages to the latest version
