@@ -57,6 +57,7 @@
         - curl
         - ed
         - exa
+        - firefox-esr
         - flatpak
         - fortunes-off
         - foomatic-db
