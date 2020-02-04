@@ -8,23 +8,23 @@
         version: master
         dest: "{{ansible_env.HOME}}/src/tspub/bin"
         accept_hostkey: yes
-    - name: Clone emacs repo
+    - name: Clone ansible repo
       git:
-        repo: git@gitlab.com:tspub/etc/emacs.git
+        repo: git@gitlab.com:tspub/devops/ansible.git
         version: master
-        dest: "{{ansible_env.HOME}}/src/tspub/etc/emacs"
+        dest: "{{ansible_env.HOME}}/src/tspub/devops/ansible"
+        accept_hostkey: yes
+    - name: Clone etc repo
+      git:
+        repo: git@gitlab.com:tspub/devops/etc.git
+        version: master
+        dest: "{{ansible_env.HOME}}/src/tspub/devops/etc"
         accept_hostkey: yes
     - name: Clone nix repo
       git:
         repo: git@gitlab.com:tspub/devops/nix.git
         version: master
         dest: "{{ansible_env.HOME}}/src/tspub/devops/nix"
-        accept_hostkey: yes
-    - name: Clone ansible repo
-      git:
-        repo: git@gitlab.com:tspub/devops/ansible.git
-        version: master
-        dest: "{{ansible_env.HOME}}/src/tspub/devops/ansible"
         accept_hostkey: yes
     - name: Clone lazygit repo
       git:
@@ -45,34 +45,34 @@
         dest: "{{ansible_env.HOME}}/src/tsprv/org/work"
         accept_hostkey: yes
 
-    - name: Symlink ansible repo to $HOME/ansible
-      file:
-        src: "{{ansible_env.HOME}}/src/tspub/devops/ansible"
-        dest: "{{ansible_env.HOME}}/ansible"
-        state: link
-        force: yes
     - name: Symlink bin repo to $HOME/bin
       file:
         src: "{{ansible_env.HOME}}/src/tspub/bin"
         dest: "{{ansible_env.HOME}}/bin"
         state: link
         force: yes
-    - name: Symlink etc group to $HOME/etc
+    - name: Symlink ansible repo to $HOME/ansible
       file:
-        src: "{{ansible_env.HOME}}/src/tspub/etc"
-        dest: "{{ansible_env.HOME}}/etc"
+        src: "{{ansible_env.HOME}}/src/tspub/devops/ansible"
+        dest: "{{ansible_env.HOME}}/ansible"
         state: link
         force: yes
-    - name: Symlink org group to $HOME/org
+    - name: Symlink etc repo to $HOME/etc
       file:
-        src: "{{ansible_env.HOME}}/src/tsprv/org"
-        dest: "{{ansible_env.HOME}}/org"
+        src: "{{ansible_env.HOME}}/src/tspub/devops/etc"
+        dest: "{{ansible_env.HOME}}/etc"
         state: link
         force: yes
     - name: Symlink nix repo to $HOME/nix
       file:
         src: "{{ansible_env.HOME}}/src/tspub/devops/nix"
         dest: "{{ansible_env.HOME}}/nix"
+        state: link
+        force: yes
+    - name: Symlink org group to $HOME/org
+      file:
+        src: "{{ansible_env.HOME}}/src/tsprv/org"
+        dest: "{{ansible_env.HOME}}/org"
         state: link
         force: yes
     - name: Symlink nix repo pkgs dir to $HOME/.config/nixpkgs
