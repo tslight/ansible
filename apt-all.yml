@@ -55,6 +55,7 @@
         - cups
         - cups-pdf
         - curl
+        - dstat
         - ed
         - exa
         - firefox-esr
@@ -71,6 +72,7 @@
         - htop
         - hunspell
         - hwinfo
+        - iftop
         - imagemagick
         - inkscape
         - intel-microcode
@@ -96,6 +98,7 @@
         - ngrep
         - neovim
         - net-tools
+        - nethogs
         - network-manager-fortisslvpn
         - network-manager-gnome # for nm-applet
         - network-manager-openconnect
@@ -111,6 +114,8 @@
         - powertop
         - printer-driver-hpcups
         - psmisc
+        - pulseaudio
+        - pulsemixer
         - python3
         - python3-pip
         - qbittorrent
@@ -122,6 +127,7 @@
         - remmina
         - rlwrap
         - rsync
+        - rclone
         - rtorrent
         - rxvt-unicode-256color
         - sakura
@@ -135,6 +141,7 @@
         - slop
         - snapd
         - spacefm
+        - speedtest-cli
         - stterm
         - suckless-tools
         - surf
