@@ -7,9 +7,9 @@
   vars:
     dest: "{{ansible_env.HOME}}/src/gitlab/tslight"
     links:
-      - { src: 'tslight/bin', dest: 'bin'}
-      - { src: 'tslight/ansible', dest: 'ansible'}
-      - { src: 'tslight/stumpwm', dest: '.stumpwm.d'}
+      - { src: 'bin', dest: 'bin'}
+      - { src: 'ansible', dest: 'ansible'}
+      - { src: 'stumpwm', dest: '.stumpwm.d'}
   tasks:
     - name: Get all GitLab projects
       uri:
