@@ -1,0 +1,87 @@
+- name: Install and remove packages
+  hosts: localhost
+  connection: local
+  become: yes
+  tasks:
+  - name: Print Distro information
+    ansible.builtin.debug:
+      msg:
+        - "Ansible Distribution = {{ansible_distribution}}"
+        - "Ansible Distribution Version = {{ansible_distribution_version}}"
+        - "Ansible Distribution Release = {{ansible_distribution_release}}"
+  # APT DISTROS
+  - name: Load lists of apt packages to remove & install
+    include_vars:
+      file: ./pkg/deb.yml
+      name: deb
+    when: ansible_pkg_mgr == 'apt'
+  - name: Removing apt packages
+    apt:
+      pkg: "{{deb.remove}}"
+      state: absent
+      purge: yes
+      autoremove: yes
+      autoclean: yes
+    when: ansible_pkg_mgr == 'apt'
+  - name: Installing apt packages
+    apt:
+      update_cache: yes
+      pkg: "{{deb.install}}"
+      state: latest
+      install_recommends: no
+    when: ansible_pkg_mgr == 'apt'
+
+  # DNF DISTROS
+  - name: Load lists of dnf packages to remove & install
+    include_vars:
+      file: ./pkg/rpm.yml
+      name: rpm
+    when: ansible_pkg_mgr == 'dnf'
+  - name: install the rpmfusion repo packages
+    dnf:
+      name:
+        - https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ansible_distribution_version}}.noarch.rpm
+        - https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ansible_distribution_version}}.noarch.rpm
+      state: present
+      disable_gpg_check: yes
+      update_cache: yes
+    when: ansible_pkg_mgr == 'dnf'
+  - name: Removing dnf packages
+    dnf:
+      name: "{{rpm.remove}}"
+      state: absent
+      autoremove: yes
+    when: ansible_pkg_mgr == 'dnf'
+  - name: Installing dnf packages
+    dnf:
+      update_cache: yes
+      name: "{{rpm.install}}"
+      state: latest
+      install_weak_deps: false
+      update_cache: yes
+    when: ansible_pkg_mgr == 'dnf'
+
+   # PACMAN DISTROS
+  - name: Load lists of pacman packages to remove & install
+    include_vars:
+      file: ./pkg/pac.yml
+      name: pac
+    when: ansible_pkg_mgr == 'pacman'
+  - name: Removing pacman packages
+    pacman:
+      name: "{{pac.remove}}"
+      state: absent
+      extra_args: --recursive --noconfirm
+    when: ansible_pkg_mgr == 'pacman'
+  - name: Upgrade pacman packages
+    pacman:
+      update_cache: yes
+      upgrade: yes
+    when: ansible_pkg_mgr == 'pacman'
+  - name: Installing pacman packages
+    pacman:
+      update_cache: yes
+      name: "{{pac.install}}"
+      state: present
+      extra_args: --needed --noconfirm
+    when: ansible_pkg_mgr == 'pacman'

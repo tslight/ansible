@@ -1,0 +1,65 @@
+- name: UPower tweaks
+  hosts: localhost
+  become: yes
+  tasks:
+
+   - name: Installing apt packages
+     become: yes
+     apt:
+       pkg: upower
+       state: latest
+     when: ansible_pkg_mgr == 'apt'
+
+   - name: Installing dnf packages
+     become: yes
+     dnf:
+       name: upower
+       state: latest
+     when: ansible_pkg_mgr == 'dnf'
+
+   - name: Installing pacman packages
+     become: yes
+     pacman:
+       name: upower
+       state: latest
+     when: ansible_pkg_mgr == 'pacman'
+
+   - name: Change use percentage for policy to true
+     ini_file:
+      path: /etc/UPower/UPower.conf
+      section: UPower
+      option: UsePercentageForPolicy
+      value: "true"
+
+   - name: Change low percentage to 20%
+     ini_file:
+       path: /etc/UPower/UPower.conf
+       section: UPower
+       option: PercentageLow
+       value: "20"
+
+   - name: Change critical percentage to 15%
+     ini_file:
+       path: /etc/UPower/UPower.conf
+       section: UPower
+       option: PercentageCritical
+       value: "15"
+
+   - name: Change action percentage to 10%
+     ini_file:
+       path: /etc/UPower/UPower.conf
+       section: UPower
+       option: PercentageAction
+       value: "10"
+
+   - name: Change critical action to poweroff
+     ini_file:
+       path: /etc/UPower/UPower.conf
+       section: UPower
+       option: CriticalPowerAction
+       value: "PowerOff"
+
+   - name: Enable upower systemd service
+     systemd:
+       enabled: true
+       name: upower

@@ -1,0 +1,34 @@
+- name: Install Miniconda
+  hosts: localhost
+  become: no
+  vars:
+    url: 'https://repo.anaconda.com/miniconda'
+    installer: 'Miniconda3-latest-Linux-x86_64.sh'
+    installto: "{{ansible_env.HOME}}/conda"
+  tasks:
+  - name: Download Install Script
+    get_url:
+      url: "{{url}}/{{installer}}"
+      dest: /tmp
+  - name: Check for Existing Installation
+    stat:
+      path: '{{installto}}'
+    register: miniconda
+  - name: Run Installer Script
+    shell: |
+      bash /tmp/Miniconda3-latest-Linux-x86_64.sh -b -p {{installto}}
+    when: miniconda.stat.exists == false
+  # - name: Update Existing Install
+  #   shell: |
+  #     bash /tmp/Miniconda3-latest-Linux-x86_64.sh -b -u -p {{installto}}
+  #   when: miniconda.stat.exists and miniconda.stat.isdir
+  - name: Run conda init
+    shell: |
+      {{installto}}/bin/conda init
+  - name: Check version of installed Python
+    shell: "{{installto}}/bin/python -V 2>&1 | awk '{print $2}' | cut -d . -f 1,2"
+    register: python_version
+    changed_when: false
+  - name: Downgrade Conda's default python to 3.8
+    shell: '{{installto}}/bin/conda install python\=3.8 -y'
+    when: python_version.stdout != '3.8'

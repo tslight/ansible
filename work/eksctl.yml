@@ -1,0 +1,9 @@
+- name: Install EKS
+  hosts: all
+  tasks:
+  - name: Extract eksctl to /usr/local/bin
+    become: yes
+    unarchive:
+      src: https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_linux_amd64.tar.gz
+      dest: /usr/local/bin
+      remote_src: yes

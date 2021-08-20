@@ -1,0 +1,54 @@
+- name: systemd tweaks
+  hosts: localhost
+  become: yes
+  tasks:
+
+  - name: Enable journald persistence
+    ini_file:
+      dest: "/etc/systemd/journald.conf"
+      section: Journal
+      option: Storage
+      value: "persistent"
+      no_extra_spaces: yes
+
+  - name: Set journald maximum disk usage
+    ini_file:
+      dest: "/etc/systemd/journald.conf"
+      section: Journal
+      option: SystemMaxUse
+      value: "512M"
+      no_extra_spaces: yes
+
+  - name: Restart journald
+    systemd:
+      name: systemd-journald
+      state: restarted
+
+  - name: Create tty kbdrate service
+    blockinfile:
+      path: "/etc/systemd/system/kbdrate.service"
+      create: true
+      backup: yes
+      block: |
+        [Unit]
+        Description=Keyboard repeat rate in tty.
+
+        [Service]
+        Type=oneshot
+        RemainAfterExit=yes
+        StandardInput=tty
+        StandardOutput=tty
+        ExecStart=/usr/sbin/kbdrate -s -d 200 -r 50
+
+        [Install]
+        WantedBy=multi-user.target
+
+  - name: Enable tty kbdrate service
+    systemd:
+      enabled: true
+      name: kbdrate
+
+  - name: Disable NetworkManager-wait-online.service
+    systemd:
+      enabled: false
+      name: NetworkManager-wait-online.service

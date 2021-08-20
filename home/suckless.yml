@@ -1,0 +1,50 @@
+- name: Install Suckless tools from git
+  hosts: localhost
+  vars:
+    basepath: '{{ansible_env.HOME}}/src/gitlab/tspub/c'
+  tasks:
+    - name: Installing apt packages
+      become: yes
+      apt:
+        pkg: [build-essential, git]
+        state: latest
+      when: ansible_pkg_mgr == 'apt'
+
+    - name: Install apt build dependancies
+      become: yes
+      apt:
+        update_cache: yes
+        pkg: suckless-tools
+        state: build-dep
+      when:
+        - ansible_pkg_mgr == 'apt'
+
+    - name: Installing dnf packages
+      become: yes
+      dnf:
+        name: [development-tools, git]
+        state: latest
+      when: ansible_pkg_mgr == 'dnf'
+
+    - name: Installing pacman packages
+      become: yes
+      pacman:
+        name: [base-devel, git]
+        state: latest
+      when: ansible_pkg_mgr == 'pacman'
+
+    - name: Clone repos
+      git:
+        repo: 'git@gitlab.com:tspub/c/{{item}}.git'
+        version: master
+        dest: "{{basepath}}/{{item}}"
+        accept_hostkey: yes
+      loop:
+        - st
+        - tabbed
+    - name: Install
+      become: yes
+      command: make install chdir="{{basepath}}/{{item}}"
+      loop:
+        - st
+        - tabbed

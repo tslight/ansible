@@ -1,0 +1,92 @@
+- name: Install StumpWM from Quicklisp
+  hosts: localhost
+  vars:
+    qldir: '{{ansible_env.HOME}}/quicklisp'
+    qlpath: '{{ansible_env.HOME}}/quicklisp.lisp'
+    slpath: '{{ansible_env.HOME}}/quicklisp/setup.lisp'
+  tasks:
+
+  - name: Installing dependant apt packages
+    become: yes
+    apt:
+      pkg:
+        - sbcl
+        - ttf-dejavu
+        - xfonts-terminus
+      state: latest
+    when:
+      - ansible_pkg_mgr == 'apt'
+
+  - name: Installing dependant dnf packages
+    become: yes
+    dnf:
+      name:
+        - sbcl
+        - dejavu-fonts-all
+        - terminus-fonts*
+      state: latest
+    when: ansible_pkg_mgr == 'dnf'
+
+  - name: Installing dependant pacman packages
+    become: yes
+    pacman:
+      name:
+        - sbcl
+        - ttf-dejavu
+        - terminus-font
+      state: latest
+    when: ansible_pkg_mgr == 'pacman'
+
+  - name: Download Quicklisp
+    get_url:
+      url: https://beta.quicklisp.org/quicklisp.lisp
+      dest: '{{qlpath}}'
+
+  - name: Check if Quicklisp already installed
+    stat:
+      path: '{{slpath}}'
+    register: setup
+
+  - name: Install Quicklisp
+    shell: |
+      sbcl --load {{qlpath}} --eval '(quicklisp-quickstart:install)'
+      sbcl --load {{slpath}} --eval '(ql:add-to-init-file)'
+    when: not setup.stat.exists
+
+  - name: Install StumpWM and StumpWM contrib packages
+    shell: |
+      sbcl --load {{slpath}} --eval '(ql:quickload :stumpwm)'
+      sbcl --load {{slpath}} --eval '(ql:quickload :xembed)'
+      sbcl --load {{slpath}} --eval '(ql:quickload :swank)'
+      sbcl --load {{slpath}} --eval '(ql:quickload :quicklisp-slime-helper)'
+      sbcl --load {{slpath}} --eval '(ql:quickload :zpng)'
+
+  - name: Update Quicklisp and it's packages
+    shell: |
+      sbcl --load {{slpath}} --eval '(ql:update-client)'
+      sbcl --load {{slpath}} --eval '(ql:update-dist "quicklisp")'
+
+  - name: Install clx-truetype manual workaround crap
+    shell: |
+      sbcl --load {{slpath}} --eval '(ql:quickload :clx)'
+      sbcl --load {{slpath}} --eval '(ql:quickload :cl-aa)'
+      sbcl --load {{slpath}} --eval '(ql:quickload :cl-fad)'
+      sbcl --load {{slpath}} --eval '(ql:quickload :cl-paths-ttf)'
+      sbcl --load {{slpath}} --eval '(ql:quickload :cl-store)'
+      sbcl --load {{slpath}} --eval '(ql:quickload :cl-vectors)'
+      sbcl --load {{slpath}} --eval '(ql:quickload :trivial-features)'
+      sbcl --load {{slpath}} --eval '(ql:quickload :zpb-ttf)'
+
+  - name: Cloning clx-truetype to {{qldir}}/local-projects
+    git:
+      repo: https://github.com/l04m33/clx-truetype
+      version: master
+      dest: '{{qldir}}/local-projects/clx-truetype'
+      accept_hostkey: yes
+
+  - name: Cloning stumpwm-contrib to {{ansible_env.HOME}}/.stumpwm-contrib
+    git:
+      repo: https://github.com/stumpwm/stumpwm-contrib.git
+      version: master
+      dest: "{{ansible_env.HOME}}/.stumpwm-contrib"
+      accept_hostkey: yes

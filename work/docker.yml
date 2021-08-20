@@ -1,0 +1,102 @@
+- name: Install Docker CE
+  hosts: localhost
+  connection: local
+  become: yes
+  tasks:
+
+  - name: Allow apt to use a repository over HTTPS
+    apt:
+      pkg:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - gnupg2
+        - software-properties-common
+      state: present
+      update_cache: yes
+    when: ansible_pkg_mgr == 'apt'
+  - name: Fetching docker gpg key for apt
+    apt_key:
+      url: "https://download.docker.com/linux/debian/gpg"
+      state: present
+    when: ansible_pkg_mgr == 'apt'
+
+  - name: Adding docker apt sources list
+    apt_repository:
+      repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+      state: present
+      filename: docker
+      update_cache: yes
+    when: ansible_pkg_mgr == 'apt'
+
+  - name: Installing with apt
+    apt:
+      pkg:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+      state:
+        present
+    when: ansible_pkg_mgr == 'apt'
+
+  - name: Install dnf plugin support
+    dnf:
+      update_cache: yes
+      name: dnf-plugins-core
+    when: ansible_pkg_mgr == 'dnf'
+
+  - name: Add docker repo to dnf
+    command:
+      dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+    args:
+      warn: false
+    when: ansible_pkg_mgr == 'dnf'
+
+  - name: Change Fedora release version
+    command:
+      # Temporary workaround when OS is too new
+      sed -i 's/\$releasever/31/g' /etc/yum.repos.d/docker-ce.repo
+    args:
+      warn: false
+    when: ansible_pkg_mgr == 'dnf'
+
+  - name: Installing with dnf
+    dnf:
+      update_cache: yes
+      name:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+    when: ansible_pkg_mgr == 'dnf'
+  - name: Enable backward compatibility for cgroups on Fedora 31+
+    command:
+      grubby --update-kernel=ALL --args="systemd.unified_cgroup_hierarchy=0"
+    when:
+      - ansible_pkg_mgr == 'dnf'
+      - ansible_distribution_version >= '31'
+
+  - name: Add {{ansible_user_id}} to docker group
+    user:
+      name: "{{ansible_user_id}}"
+      groups: docker
+      append: yes
+
+  - name: Add docker to firewalld trusted zone
+    firewalld:
+      zone: trusted
+      interface: docker0
+      permanent: yes
+      immediate: yes
+      state: enabled
+    # shell: |
+    #   firewall-cmd --permanent --zone=trusted --change-interface=docker0
+    #   firewall-cmd --reload
+    #   systemctl restart firewalld
+    #   systemctl restart docker
+    when: ansible_distribution == 'Fedora' or ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+  - name: Start and enable docker service
+    systemd:
+      enabled: true
+      state: started
+      name: docker

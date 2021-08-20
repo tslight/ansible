@@ -1,0 +1,16 @@
+- name: Install Microsoft Teams
+  hosts: localhost
+  connection: local
+  become: yes
+  tasks:
+
+  - name: Installing deb package
+    apt:
+      deb: https://packages.microsoft.com/repos/ms-teams/pool/main/t/teams/teams_1.3.00.958_amd64.deb
+    when: ansible_pkg_mgr == 'apt'
+
+  - name: Installing dnf packages
+    dnf:
+      name: https://packages.microsoft.com/yumrepos/ms-teams/teams-insiders-1.3.00.5153-1.x86_64.rpm
+      state: latest
+    when: ansible_pkg_mgr == 'dnf'

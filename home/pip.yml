@@ -1,0 +1,33 @@
+- name: Install Python 3 PyPi pips
+  hosts: localhost
+  become: no
+  tasks:
+  - name: Installing remote pips
+    pip:
+      name:
+        - black
+        - flake8
+        - ipython
+        - pyflakes
+        - setuptools
+        - twine
+      state: present
+      executable: pip3
+      extra_args: --user
+  - name: Finding local pips
+    find:
+      paths: '{{ansible_env.HOME}}/src/gitlab/tspub/py'
+      excludes: '*/\.*'
+      hidden: no
+      patterns: 'setup.py'
+      recurse: yes
+    register: found
+  - name: Installing local pips
+    pip:
+      name: '{{item.path | dirname}}'
+      editable: yes
+      extra_args: --user
+      executable: pip3
+    with_items: '{{found.files}}'
+    loop_control:
+      label: "{{item.path | dirname}}"

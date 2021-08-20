@@ -1,0 +1,35 @@
+- name: Firewall configuration
+  hosts: localhost
+  become: yes
+  tasks:
+
+  - name: Installing python bindings for firewalld
+    dnf:
+      name:
+        - python3-firewall
+      state: latest
+    when: ansible_pkg_mgr == 'dnf'
+
+  - name: Add libvirt to trusted firewalld zone
+    firewalld:
+      zone: trusted
+      interface: br0
+      permanent: yes
+      immediate: yes
+      state: enabled
+    when: ansible_distribution == 'Fedora' or ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+  - name: Add port 5900/tcp to firewalld for libvirt
+    firewalld:
+      port: 5900/tcp
+      permanent: yes
+      immediate: yes
+      state: enabled
+    when: ansible_distribution == 'Fedora' or ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+  # - name: Configure firewalld for libvirt
+  #   shell: |
+  #     firewall-cmd --zone=trusted --change-interface=br0 --permanent
+  #     firewall-cmd --add-port=5900/tcp --permanent
+  #     firewall-cmd --reload
+  #   when: ansible_distribution == 'Fedora' or ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'

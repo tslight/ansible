@@ -1,0 +1,42 @@
+- name: Install the latest Go
+  hosts: localhost
+  become: yes
+  vars:
+    number: "{{version | default('1.14.2')}}"
+    requested: "{{'go' + number }}"
+    go_path: /usr/local
+  tasks:
+  - name: Check version of installed Go
+    shell: /usr/local/go/bin/go version | awk '{print $3}'
+    register: current
+    changed_when: false
+  - name: Compare installed version to requested
+    debug:
+      msg: Installed = {{current.stdout}}, Requested = {{requested}}
+  - name: Delete old Go
+    file:
+      path: '{{go_path}}/go'
+      state: absent
+    when: current.stdout != requested
+  - name: Download & extract Go
+    unarchive:
+      src: https://dl.google.com/go/go{{number}}.linux-amd64.tar.gz
+      dest: '{{go_path}}'
+      remote_src: yes
+    when: current.stdout != requested
+  - name: Add Go to /etc/profile
+    blockinfile:
+      path: /etc/profile
+      backup: yes
+      marker: "# {mark} Golang config"
+      block: |
+        export GOPATH=$HOME/go
+        export GOROOT={{go_path}}/go
+        export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+  - name: Download GolangCI-lint install script
+    get_url:
+      url: https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh
+      dest: /tmp/install-golint.sh
+      mode: '0755'
+  - name: Execute the GolangCI-lint install script
+    shell: /tmp/install-golint.sh -b /usr/local/bin v1.37.1

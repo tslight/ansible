@@ -1,0 +1,56 @@
+- name: Install & configure Microsoft SQL CLI tools
+  hosts: localhost
+  connection: local
+  environment:
+    ACCEPT_EULA: "Y"
+  become: yes
+  tasks:
+  - name: Download msprod yum repo
+    get_url:
+      url: https://packages.microsoft.com/config/rhel/7/prod.repo
+      dest: /etc/yum.repos.d/msprod.repo
+    when: ansible_pkg_mgr == 'dnf'
+  - name: Installing dnf packages
+    dnf:
+      update_cache: yes
+      name:
+        - mssql-tools
+        - msodbcsql17
+        - unixODBC-devel
+      state: latest
+    when: ansible_pkg_mgr == 'dnf'
+  - name: Fetching GPG key
+    apt_key:
+      url: "https://packages.microsoft.com/keys/microsoft.asc"
+      state: present
+    when: ansible_pkg_mgr == 'apt'
+  - name: Adding Microsoft apt sources list
+    apt_repository:
+      # repo: deb [arch=amd64] https://packages.microsoft.com/{{ansible_distribution|lower}}/{{ansible_distribution_version}}/prod {{ansible_distribution_release}} main
+      repo: deb [arch=amd64] https://packages.microsoft.com/ubuntu/20.04/prod focal main
+      state: present
+      filename: mssql
+      update_cache: yes
+    when: ansible_pkg_mgr == 'apt'
+  - name: Installing apt packages
+    apt:
+      pkg:
+        - unixodbc-dev
+        - msodbcsql17 # apt-cache depends mssql-tools
+        - mssql-tools
+      state:
+        present
+      update_cache: yes
+    when: ansible_pkg_mgr == 'apt'
+  - name: Linking MSSQL tools to /usr/local/bin
+    shell: ln -fs /opt/mssql-tools/bin/* /usr/local/bin
+    args:
+      warn: false
+  - name: Add en_US.UTF-8 locale to /etc/locale.gen
+    lineinfile:
+      dest: /etc/locale.gen
+      line: en_US.UTF-8 UTF-8
+    when: ansible_pkg_mgr == 'apt'
+  - name: Execute locale-gen to regenerate new locales
+    shell: locale-gen
+    when: ansible_pkg_mgr == 'apt'

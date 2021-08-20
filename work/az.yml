@@ -1,0 +1,59 @@
+- name: Install Azure CLI
+  hosts: localhost
+  connection: local
+  become: yes
+  tasks:
+  - name: Allow apt to use a repository over https
+    apt:
+      pkg:
+        - curl
+        - apt-transport-https
+        - lsb-release
+        - ca-certificates
+        - gnupg2
+        - software-properties-common
+      state: present
+      update_cache: yes
+    when: ansible_pkg_mgr == 'apt'
+  - name: Fetching apt gpg key
+    apt_key:
+      url: "https://packages.microsoft.com/keys/microsoft.asc"
+      state: present
+    when: ansible_pkg_mgr == 'apt'
+  - name: Adding azure-cli to apt sources list
+    apt_repository:
+      repo: deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ focal main
+      state: present
+      filename: azure-cli
+      update_cache: yes
+    when: ansible_pkg_mgr == 'apt'
+  - name: Installing with apt
+    apt:
+      pkg:
+        - azure-cli
+      state:
+        present
+    when: ansible_pkg_mgr == 'apt'
+  - name: Fetching rpm gpg key
+    rpm_key:
+      state: present
+      key: https://packages.microsoft.com/keys/microsoft.asc
+    when: ansible_pkg_mgr == 'dnf'
+  - name: Add azure-cli to yum repos
+    blockinfile:
+      path: /etc/yum.repos.d/azure-cli.repo
+      create: yes
+      block: |
+        [azure-cli]
+        name=Azure CLI
+        baseurl=https://packages.microsoft.com/yumrepos/azure-cli
+        enabled=1
+        gpgcheck=1
+        gpgkey=https://packages.microsoft.com/keys/microsoft.asc
+    when: ansible_pkg_mgr == 'dnf'
+  - name: Installing with dnf
+    dnf:
+      update_cache: yes
+      name:
+        - azure-cli
+    when: ansible_pkg_mgr == 'dnf'

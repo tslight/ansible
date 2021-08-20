@@ -1,0 +1,39 @@
+- name: Install kubectl
+  hosts: all
+  become: yes
+  tasks:
+  - name: Add an apt signing key for Kubernetes
+    apt_key:
+      url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+      state: present
+    when: ansible_pkg_mgr == 'apt'
+  - name: Adding apt repository for Kubernetes
+    apt_repository:
+      repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+      state: present
+      filename: kubernetes.list
+    when: ansible_pkg_mgr == 'apt'
+  - name: Install kubectl with apt
+    apt:
+      name: kubectl
+      state: present
+      update_cache: yes
+    when: ansible_pkg_mgr == 'apt'
+  - name: Add /etc/yum.repos.d/kubernetes.repo
+    copy:
+      dest: /etc/yum.repos.d/kubernetes.repo
+      content: |
+        [kubernetes]
+        name=Kubernetes
+        baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+        enabled=1
+        gpgcheck=1
+        repo_gpgcheck=1
+        gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+    when: ansible_pkg_mgr == 'dnf'
+  - name: Install kubectl with dnf
+    dnf:
+      update_cache: yes
+      state: present
+      name: kubectl
+    when: ansible_pkg_mgr == 'dnf'

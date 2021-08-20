@@ -1,0 +1,18 @@
+- name: Install the latest Android Platform Tools
+  hosts: localhost
+  become: yes
+  vars:
+    destination: /opt
+  tasks:
+  - name: Download & extract Android Platform Tools
+    unarchive:
+      src: https://dl.google.com/android/repository/platform-tools-latest-linux.zip
+      dest: '{{destination}}'
+      remote_src: yes
+  - name: Add '{{destination}}'/platform-tools to $PATH in /etc/profile
+    blockinfile:
+      path: /etc/profile
+      backup: yes
+      marker: "# {mark} Android Platform Tools bin"
+      block: |
+        export PATH=$PATH:{{destination}}/platform-tools

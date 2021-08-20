@@ -1,0 +1,10 @@
+- name: Install PyCharm
+  hosts: localhost
+  become: yes
+  tasks:
+  - name: Installing snap
+    snap:
+      name:
+        - pycharm-community
+      classic: yes
+      state: present

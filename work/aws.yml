@@ -1,0 +1,11 @@
+- name: Install AWS CLI
+  hosts: all
+  tasks:
+  - name: Unzip aws installer
+    unarchive:
+      src: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+      dest: /tmp
+      remote_src: yes
+  - name: Run aws installer script
+    become: yes
+    command: /tmp/aws/install

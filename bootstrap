@@ -1,0 +1,248 @@
+#!/usr/bin/env bash
+
+# bash <(curl -s https://gitlab.com/tspub/devops/ansible/-/raw/master/bootstrap)
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+NC="$(tput sgr0)"
+BLK="$(tput setaf 0)"
+RED="$(tput setaf 1)"
+GRN="$(tput setaf 2)"
+YEL="$(tput setaf 3)"
+BLU="$(tput setaf 4)"
+MAG="$(tput setaf 5)"
+CYN="$(tput setaf 6)"
+WHT="$(tput setaf 7)"
+
+usage() {
+    echo "
+$(basename "$0") [-a] [-c] [-d] [-i] [-s]
+
+-a : Run all the things!
+-c : Clone the necessary repos.
+-d : Install necessary dependencies.
+-i : Run in interactive mode.
+-s : Choose ansible scripts to run.
+"
+}
+
+ask() {
+    local question="$1"
+
+    while :; do
+        # -e for readline bindings
+        # -r to not mangle backslashes
+        # -n 1 for execution without return
+        read -rep "$question " ans
+        case $ans in
+            [Yy][Ee][Ss]|[Yy])
+                return 0
+                ;;
+            [Nn][Oo]|[Nn])
+                return 1
+                ;;
+            [Qq][Uu][Ii][Tt]|[Qq])
+                exit 0
+                ;;
+            *)
+                echo "$ans is invalid. Enter (y)es, (n)o or (q)uit."
+                ;;
+        esac
+    done
+}
+
+show_menu() {
+    clear
+    echo
+    echo "Enter the corresponding number to toggle a selection."
+    echo "Enter a to toggle all, r to reset selection or q to quit."
+    echo
+    for i in "${!options[@]}"; do
+        printf "%3d%s) %s\n" $((i+1)) "${choices[i]:- }" "${options[i]}"
+    done
+    echo
+}
+
+get_selection() {
+    selectall=false options=("$@")
+
+    while :; do
+        show_menu
+        [[ "$msg" ]] && { echo "$msg"; echo; }
+        read -rep "----> " input
+        case "$input" in
+            A|a)
+                if "$selectall"; then
+                    for i in "${!options[@]}"; do
+                        choices[i]=""
+                    done
+                    selectall=false
+                else
+                    for i in "${!options[@]}"; do
+                        choices[i]="+"
+                    done
+                    selectall=true
+                fi
+                ;;
+            Q|q)
+                break
+                ;;
+            R|r)
+                for i in "${!options[@]}"; do
+                    choices[i]=""
+                done
+                ;;
+            *)
+                # regex to catch digits between 1-99, but number must be less than size of array
+                if ! [[ "$input" =~ ^[1-9]$|^[1-9][0-9]+$ && "$input" -le "${#options[@]}" ]]; then
+                    msg="Invalid option: $input"
+                    continue
+                fi
+                ((input--))
+                if [[ "${choices[input]}" ]]; then
+                    choices[input]=""
+                else
+                    choices[input]="+"
+                fi
+                for i in "${!options[@]}"; do
+                    if [[ "${choices[i]}" ]]; then
+                        selectall=true
+                    else
+                        selectall=false
+                        break
+                    fi
+                done
+                msg=""
+                ;;
+        esac
+    done
+    for i in "${!options[@]}"; do
+        [[ "${choices[i]}" ]] && selected+=("${options[i]}")
+    done
+}
+
+install_deps() {
+    source /etc/os-release
+    printf "${YEL}OS is $ID. Installing packages...${NC}\n"
+    case "$ID" in
+        arch*|manjaro*)
+            sudo pacman -Syu --noconfirm && \
+                sudo pacman -S --noconfirm --needed ansible cowsay git rsync openssh || \
+                    return 1
+            ;;
+        debian|neon|ubuntu|raspbian)
+            sudo apt -y update && sudo apt -y upgrade && \
+                sudo apt -y install ansible cowsay git rsync openssh-client || \
+                    return 1
+            ;;
+        centos|fedora)
+            sudo dnf upgrade && \
+                sudo dnf -y install ansible cowsay git rsync openssh || \
+                    return 1
+            ;;
+        *)
+            printf "${RED}$ID not supported\n${NC}"
+            return 1
+            ;;
+    esac
+    printf "${GRN}DONE!\n${NC}"
+    return 0
+}
+
+clone_repos() {
+    rm -rf /tmp/dotfiles
+    git clone https://gitlab.com/tsprv/devops/dotfiles /tmp/dotfiles && \
+        git -C /tmp/dotfiles remote remove origin && \
+        git -C /tmp/dotfiles remote add origin git@gitlab.com:tsprv/devops/dotfiles && \
+        git -C /tmp/dotfiles remote -v && \
+        rsync -ah /tmp/dotfiles/ $HOME && \
+        chmod 700 $HOME/.ssh && chmod 600 $HOME/.ssh/* && \
+        git -C $HOME fetch --all && \
+        git -C $HOME branch --set-upstream-to=origin/master master && \
+        git -C $HOME pull && \
+        rm -rf /tmp/ansible && \
+        git clone git@gitlab.com:tspub/devops/ansible /tmp/ansible && \
+        return 0 || return 1
+}
+
+choose() {
+    shopt -s globstar dotglob extglob nullglob
+
+    if [[ ! "$DIR" =~ .*ansible ]]; then
+        printf "${YEL}Running Directory is $DIR. Looking in /tmp instead...${NC}\n"
+        DIR=/tmp/ansible
+    fi
+
+    ansible_script_paths=($DIR/*/*.yml)
+
+    if [[ "${#ansible_script_paths[@]}" -gt 0 ]]; then
+        get_selection "${ansible_script_paths[@]}"
+        clear
+        if [[ "${#selected[@]}" -gt 0 ]]; then
+            printf "\n"
+            printf '%s\n' "${selected[@]}"
+            printf "\n"
+            if ask "${YEL}Do you want to continue?${NC}"; then
+                clear
+                read -resp "Enter sudo password: " PASS
+                clear
+                for file in "${selected[@]}"; do
+                    printf "${YEL}Executing $file...\n${NC}"
+                    ansible-playbook -i "$DIR/hosts.ini" "$file" \
+                                     --extra-vars "ansible_become_pass=\"$PASS\""
+                    printf "${GRN}Successfully executed $file :-)\n${NC}"
+                done
+            else
+                printf "${RED}Aborting!\n${NC}"
+                cowsay "Goodbye!"
+            fi
+        else
+            printf "${RED}Nothing selected!\n${NC}"
+            cowsay "Goodbye!"
+        fi
+    else
+        printf "${RED}Can't find any ansible scripts in $DIR. Aborting :-(${NC}\n"
+    fi
+}
+
+interactive() {
+    if ask "Install dependencies?"; then
+        install_deps
+    else
+        printf "${YEL}Skipping installing dependencies.${NC}\n"
+    fi
+    if ask "Clone repos?"; then
+        clone_repos
+    else
+        printf "${YEL}Skipping cloning repos.${NC}\n"
+    fi
+    if ask "Choose ansible scripts?"; then
+        choose
+    else
+        printf "${YEL}Not running any ansible scripts.${NC}\n"
+    fi
+}
+
+if [ "$#" -gt 0 ]; then
+    while getopts ":a:i:h:cds" opt; do
+        case ${opt} in
+            a) install_deps && clone_repos && choose
+               ;;
+            i) interactive
+               ;;
+            c) clone_repos
+               ;;
+            d) install_deps
+               ;;
+            h) usage
+               ;;
+            s) choose
+               ;;
+            \?) usage && exit 1
+                ;;
+        esac
+    done
+else
+    printf "${YEL}No arguments provided. Running in interactive mode.${NC}\n"
+    interactive
+fi

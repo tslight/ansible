@@ -1,0 +1,43 @@
+- name: Change console font to terminus
+  hosts: localhost
+  become: yes
+  tasks:
+
+   - name: Installing apt packages
+     become: yes
+     apt:
+       pkg: fonts-terminus
+       state: latest
+     when: ansible_pkg_mgr == 'apt'
+
+   - name: Installing dnf packages
+     become: yes
+     dnf:
+       name: terminus-fonts*
+       state: latest
+     when: ansible_pkg_mgr == 'dnf'
+
+   - name: Installing pacman packages
+     become: yes
+     pacman:
+       name: terminus-font
+       state: latest
+     when: ansible_pkg_mgr == 'pacman'
+
+   - name: Make sure /etc/vconsole exists
+     file:
+       path: /etc/vconsole.conf
+       state: touch
+
+   - name: Set vconsole font
+     replace:
+       path: /etc/vconsole.conf
+       regexp: '^FONT=.*$'
+       replace: 'FONT="ter-u18b"'
+     when: ansible_pkg_mgr == 'pacman'
+
+   - name: Set vconsole font
+     lineinfile:
+       dest: /etc/vconsole.conf
+       line: 'FONT="Uni3-TerminusBold18x10"'
+     when: ansible_pkg_mgr == 'apt'

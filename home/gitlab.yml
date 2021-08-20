@@ -1,0 +1,56 @@
+- name: Clone git repositories
+  hosts: localhost
+  vars:
+    repos:
+      - 'tsprv/devops/secrets'
+      - 'tsprv/org/personal'
+      - 'tsprv/org/work'
+      - 'tspub/bin'
+      - 'tspub/devops/ansible'
+      - 'tspub/devops/etc'
+      - 'tspub/lisp/emacs'
+      - 'tspub/lisp/lazygit'
+      - 'tspub/lisp/stumpwm'
+      - 'tspub/py/gitforge'
+    links:
+      - { src: 'tspub/bin', dest: 'bin'}
+      - { src: 'tspub/devops/ansible', dest: 'ansible'}
+      - { src: 'tspub/lisp/stumpwm', dest: '.stumpwm.d'}
+  tasks:
+
+    - name: Installing apt packages
+      become: yes
+      apt:
+        pkg: git
+        state: latest
+      when: ansible_pkg_mgr == 'apt'
+
+    - name: Installing dnf packages
+      become: yes
+      dnf:
+        name: git
+        state: latest
+      when: ansible_pkg_mgr == 'dnf'
+
+    - name: Installing pacman packages
+      become: yes
+      pacman:
+        name: git
+        state: latest
+      when: ansible_pkg_mgr == 'pacman'
+
+    - name: Cloning GitLab repos to {{ansible_env.HOME}}/src/gitlab
+      git:
+        repo: "git@gitlab.com:{{item}}.git"
+        version: master
+        dest: "{{ansible_env.HOME}}/src/gitlab/{{item}}"
+        accept_hostkey: yes
+      loop: '{{repos}}'
+
+    - name: Symlink repos to {{ansible_env.HOME}}
+      file:
+        src: "{{ansible_env.HOME}}/src/gitlab/{{item.src}}"
+        dest: "{{ansible_env.HOME}}/{{item.dest}}"
+        state: link
+        force: yes
+      loop: '{{links}}'

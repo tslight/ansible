@@ -1,0 +1,46 @@
+remove:
+- nano
+- vim-minimal
+install:
+- "@Development Libraries"
+- "@Development Tools"
+- '@C Development Tools and Libraries'
+- ShellCheck
+- bash-completion
+- bat
+- bc
+- cowsay
+- curl
+- evtest
+- exa
+- fortune-mod
+- gdisk
+- git
+- jq
+- lm_sensors
+- lshw
+- lz4
+- lzip
+- mlocate
+- ncdu
+- neovim
+- net-tools
+- ngrep
+- nmap
+- p7zip
+- perl-Image-ExifTool
+- powertop
+- psmisc
+- ranger
+- redhat-lsb
+- rsync
+- rtorrent
+- terminus-fonts*
+- tmux
+- tree
+- unzip
+- w3m
+- w3m-img
+- wget
+- zip
+- zsh

@@ -1,0 +1,60 @@
+- name: Install Dropbox daemon & CLI frontend
+  hosts: localhost
+  vars:
+    links:
+      - { src: 'Documents', dest: 'Documents'}
+      - { src: 'Documents/org', dest: 'org'}
+      - { src: 'Pictures', dest: 'Pictures'}
+      - { src: 'Music', dest: 'Music'}
+      - { src: 'Videos', dest: 'Videos'}
+  tasks:
+
+  - name: Installing dependant apt packages
+    become: yes
+    apt:
+      pkg:
+        - curl
+        - unzip
+      state: latest
+    when:
+      - ansible_pkg_mgr == 'apt'
+
+  - name: Installing dependant dnf packages
+    become: yes
+    dnf:
+      name:
+        - curl
+        - unzip
+      state: latest
+    when: ansible_pkg_mgr == 'dnf'
+
+  - name: Check for existing installation
+    stat:
+      path: '{{ansible_env.HOME}}/.dropbox-dist'
+    register: dropbox
+
+  - name: Install Dropbox daemon
+    unarchive:
+      src: https://www.dropbox.com/download?plat=lnx.x86_64
+      dest: '{{ansible_env.HOME}}'
+      remote_src: yes
+    when: dropbox.stat.exists == false
+
+  - name: Check for {{ansible_env.HOME}}/.local/bin
+    file:
+      path: '{{ansible_env.HOME}}/.local/bin'
+      state: directory
+
+  - name: Install Dropbox frontend script
+    get_url:
+      url: https://www.dropbox.com/download?dl=packages/dropbox.py
+      dest: '{{ansible_env.HOME}}/.local/bin/dropbox'
+      mode: '755'
+
+  - name: Symlink Dropbox subdirs to {{ansible_env.HOME}}
+    file:
+      src: "{{ansible_env.HOME}}/Dropbox/{{item.src}}"
+      dest: "{{ansible_env.HOME}}/{{item.dest}}"
+      state: link
+      force: yes
+    loop: '{{links}}'
