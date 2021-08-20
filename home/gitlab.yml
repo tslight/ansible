@@ -8,8 +8,11 @@
       - 'tslight/bin'
       - 'tslight/ansible'
       - 'tslight/etc'
+      - 'tslight/cv'
       - 'tslight/emacs'
-      - 'tslight/lazygit'
+      - 'tslight/dotfiles'
+      - 'tslight/lazygit.el'
+      - 'tslight/lazygit.js'
       - 'tslight/stumpwm'
       - 'tslight/gitforge'
     links:
