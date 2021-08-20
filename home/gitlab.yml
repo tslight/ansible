@@ -2,20 +2,20 @@
   hosts: localhost
   vars:
     repos:
-      - 'tsprv/devops/secrets'
-      - 'tsprv/org/personal'
-      - 'tsprv/org/work'
-      - 'tspub/bin'
-      - 'tspub/devops/ansible'
-      - 'tspub/devops/etc'
-      - 'tspub/lisp/emacs'
-      - 'tspub/lisp/lazygit'
-      - 'tspub/lisp/stumpwm'
-      - 'tspub/py/gitforge'
+      - 'tslight/secrets'
+      - 'tslight/personal'
+      - 'tslight/work'
+      - 'tslight/bin'
+      - 'tslight/ansible'
+      - 'tslight/etc'
+      - 'tslight/emacs'
+      - 'tslight/lazygit'
+      - 'tslight/stumpwm'
+      - 'tslight/gitforge'
     links:
-      - { src: 'tspub/bin', dest: 'bin'}
-      - { src: 'tspub/devops/ansible', dest: 'ansible'}
-      - { src: 'tspub/lisp/stumpwm', dest: '.stumpwm.d'}
+      - { src: 'tslight/bin', dest: 'bin'}
+      - { src: 'tslight/ansible', dest: 'ansible'}
+      - { src: 'tslight/stumpwm', dest: '.stumpwm.d'}
   tasks:
 
     - name: Installing apt packages

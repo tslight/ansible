@@ -3,7 +3,7 @@
 Run this to slaughter some cows...
 
 ``` shell
-bash <(curl -s https://gitlab.com/tspub/devops/ansible/-/raw/master/bootstrap)
+bash <(curl -s https://gitlab.com/tslight/ansible/-/raw/master/bootstrap)
 ```
 
 ## BOOTSTRAP

@@ -1,7 +1,7 @@
 - name: Install Suckless tools from git
   hosts: localhost
   vars:
-    basepath: '{{ansible_env.HOME}}/src/gitlab/tspub/c'
+    basepath: '{{ansible_env.HOME}}/src/gitlab/tslight'
   tasks:
     - name: Installing apt packages
       become: yes
@@ -35,7 +35,7 @@
 
     - name: Clone repos
       git:
-        repo: 'git@gitlab.com:tspub/c/{{item}}.git'
+        repo: 'git@gitlab.com:tslight/{{item}}.git'
         version: master
         dest: "{{basepath}}/{{item}}"
         accept_hostkey: yes
