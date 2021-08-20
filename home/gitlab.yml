@@ -1,41 +1,51 @@
 - name: Clone git repositories
   hosts: localhost
+  vars_prompt:
+    - name: token
+      prompt: "Enter GitLab API token"
+      private: yes
   vars:
-    repos:
-      - 'tslight/secrets'
-      - 'tslight/personal'
-      - 'tslight/work'
-      - 'tslight/bin'
-      - 'tslight/ansible'
-      - 'tslight/etc'
-      - 'tslight/cv'
-      - 'tslight/emacs'
-      - 'tslight/dotfiles'
-      - 'tslight/lazygit.el'
-      - 'tslight/lazygit.js'
-      - 'tslight/stumpwm'
-      - 'tslight/gitforge'
-    links:
       - { src: 'tslight/bin', dest: 'bin'}
       - { src: 'tslight/ansible', dest: 'ansible'}
       - { src: 'tslight/stumpwm', dest: '.stumpwm.d'}
-  tasks:
 
-    - name: Installing apt packages
+  tasks:
+    - name: GitLab Get All User projects
+      uri:
+        url: "https://gitlab.com/api/v4/users/tslight/projects?per_page=100"
+        method: GET
+        validate_certs: no
+        status_code:
+          - 200
+          - 201
+          - 409
+        headers:
+          Content-Type: application/json
+          Authorization: "Bearer {{token}}"
+      register: user_projects
+
+    # - name: Print user projects
+    #   debug:
+    #     msg: "{{item.name}}"
+    #   loop: "{{user_projects.json}}"
+    #   loop_control:
+    #     label: "{{item.name}}"
+
+    - name: Installing git with apt
       become: yes
       apt:
         pkg: git
         state: latest
       when: ansible_pkg_mgr == 'apt'
 
-    - name: Installing dnf packages
+    - name: Installing git with dnf
       become: yes
       dnf:
         name: git
         state: latest
       when: ansible_pkg_mgr == 'dnf'
 
-    - name: Installing pacman packages
+    - name: Installing git with pacman
       become: yes
       pacman:
         name: git
@@ -44,11 +54,13 @@
 
     - name: Cloning GitLab repos to {{ansible_env.HOME}}/src/gitlab
       git:
-        repo: "git@gitlab.com:{{item}}.git"
+        repo: "git@gitlab.com:tslight/{{item.name}}.git"
         version: main
-        dest: "{{ansible_env.HOME}}/src/gitlab/{{item}}"
+        dest: "{{ansible_env.HOME}}/src/gitlab/tslight/{{item.name}}"
         accept_hostkey: yes
-      loop: '{{repos}}'
+      loop: '{{user_projects.json}}'
+      loop_control:
+        label: "Cloning {{item.name}} to {{ansible_env.HOME}}/src/gitlab/tslight"
 
     - name: Symlink repos to {{ansible_env.HOME}}
       file:
