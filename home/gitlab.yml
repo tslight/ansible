@@ -5,12 +5,13 @@
       prompt: "Enter GitLab API token"
       private: yes
   vars:
+    dest: "{{ansible_env.HOME}}/src/gitlab/tslight"
+    links:
       - { src: 'tslight/bin', dest: 'bin'}
       - { src: 'tslight/ansible', dest: 'ansible'}
       - { src: 'tslight/stumpwm', dest: '.stumpwm.d'}
-
   tasks:
-    - name: GitLab Get All User projects
+    - name: Get all GitLab projects
       uri:
         url: "https://gitlab.com/api/v4/users/tslight/projects?per_page=100"
         method: GET
@@ -22,49 +23,25 @@
         headers:
           Content-Type: application/json
           Authorization: "Bearer {{token}}"
-      register: user_projects
-
+      register: projects
     # - name: Print user projects
     #   debug:
     #     msg: "{{item.name}}"
-    #   loop: "{{user_projects.json}}"
+    #   loop: "{{projects.json}}"
     #   loop_control:
     #     label: "{{item.name}}"
-
-    - name: Installing git with apt
-      become: yes
-      apt:
-        pkg: git
-        state: latest
-      when: ansible_pkg_mgr == 'apt'
-
-    - name: Installing git with dnf
-      become: yes
-      dnf:
-        name: git
-        state: latest
-      when: ansible_pkg_mgr == 'dnf'
-
-    - name: Installing git with pacman
-      become: yes
-      pacman:
-        name: git
-        state: latest
-      when: ansible_pkg_mgr == 'pacman'
-
-    - name: Cloning GitLab repos to {{ansible_env.HOME}}/src/gitlab
+    - name: Cloning GitLab repos to {{dest}}
       git:
         repo: "git@gitlab.com:tslight/{{item.name}}.git"
         version: main
-        dest: "{{ansible_env.HOME}}/src/gitlab/tslight/{{item.name}}"
+        dest: "{{dest}}/{{item.name}}"
         accept_hostkey: yes
-      loop: '{{user_projects.json}}'
+      loop: '{{projects.json}}'
       loop_control:
-        label: "Cloning {{item.name}} to {{ansible_env.HOME}}/src/gitlab/tslight"
-
-    - name: Symlink repos to {{ansible_env.HOME}}
+        label: "Cloning {{item.name}} to {{dest}}"
+    - name: Symlink repos in {{dest}} to {{ansible_env.HOME}}
       file:
-        src: "{{ansible_env.HOME}}/src/gitlab/{{item.src}}"
+        src: "{{dest}}/{{item.src}}"
         dest: "{{ansible_env.HOME}}/{{item.dest}}"
         state: link
         force: yes
