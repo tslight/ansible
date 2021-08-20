@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# bash <(curl -s https://gitlab.com/tslight/ansible/-/raw/master/bootstrap)
+# bash <(curl -s https://gitlab.com/tslight/ansible/-/raw/main/bootstrap)
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
@@ -158,7 +158,7 @@ clone_repos() {
         rsync -ah /tmp/dotfiles/ $HOME && \
         chmod 700 $HOME/.ssh && chmod 600 $HOME/.ssh/* && \
         git -C $HOME fetch --all && \
-        git -C $HOME branch --set-upstream-to=origin/master master && \
+        git -C $HOME branch --set-upstream-to=origin/main main && \
         git -C $HOME pull && \
         rm -rf /tmp/ansible && \
         git clone git@gitlab.com:tslight/ansible /tmp/ansible && \

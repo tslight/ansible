@@ -42,7 +42,7 @@
     - name: Cloning GitLab repos to {{ansible_env.HOME}}/src/gitlab
       git:
         repo: "git@gitlab.com:{{item}}.git"
-        version: master
+        version: main
         dest: "{{ansible_env.HOME}}/src/gitlab/{{item}}"
         accept_hostkey: yes
       loop: '{{repos}}'
