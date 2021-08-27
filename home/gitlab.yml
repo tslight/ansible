@@ -1,10 +1,11 @@
 - name: Clone git repositories
   hosts: localhost
-  vars_prompt:
-    - name: token
-      prompt: "Enter GitLab API token"
-      private: yes
+  # vars_prompt:
+  #   - name: token
+  #     prompt: "Enter GitLab API token"
+  #     private: yes
   vars:
+    token: "{{ lookup('ini', 'token section=GitLab file=~/.gitforge.cfg') }}"
     dest: "{{ansible_env.HOME}}/src/gitlab/tslight"
     links:
       - { src: 'bin', dest: 'bin'}
