@@ -1,8 +1,8 @@
 - name: Install the latest Terraform
   hosts: all
   vars:
-    ver: "{{ version | default ('1.0.4') }}"
-    requested: "{{'v' + version | default('1.0.4') }}"
+    ver: "{{ version | default ('1.0.5') }}"
+    requested: "{{'v' + version | default('1.0.5') }}"
   tasks:
   - name: Check version of installed terraform
     shell: terraform version | head -n 1 | awk '{print $2}'
