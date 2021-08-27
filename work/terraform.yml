@@ -1,20 +1,14 @@
 - name: Install the latest Terraform
   hosts: all
   vars:
-    ver: "{{ version | default ('1.0.5') }}"
-    requested: "{{'v' + version | default('1.0.5') }}"
+    version: "1.0.5"
+    arch: "{{ 'arm64' if ansible_architecture == 'aarch64' else 'amd64' }}"
   tasks:
-  - name: Check version of installed terraform
-    shell: terraform version | head -n 1 | awk '{print $2}'
-    register: current
-    changed_when: false
-  - name: Compare installed version to requested
-    debug:
-      msg: Installed = {{current.stdout}}, Requested = {{requested}}
-  - name: Download & extract Terraform {{ver}}
+  - debug:
+      msg: "arch is {{arch}}"
+  - name: Download & extract Terraform {{version}}
     become: yes
     unarchive:
-      src: 'https://releases.hashicorp.com/terraform/{{ver}}/terraform_{{ver}}_linux_amd64.zip'
+      src: 'https://releases.hashicorp.com/terraform/{{version}}/terraform_{{version}}_linux_{{arch}}.zip'
       dest: /usr/local/bin
       remote_src: yes
-    when: current.stdout != requested
