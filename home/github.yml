@@ -1,0 +1,49 @@
+- name: Clone git repositories
+  hosts: localhost
+  # vars_prompt:
+  #   - name: token
+  #     prompt: "Enter GitHub API token"
+  #     private: yes
+  vars:
+    user: "tslight"
+    token: "{{ lookup('ini', 'token section=GitHub file=~/.gitforge.cfg') }}"
+    dest: "{{ansible_env.HOME}}/src/github/{{user}}"
+    links:
+      - { src: 'bin', dest: 'bin'}
+      - { src: 'ansible', dest: 'ansible'}
+      - { src: 'stumpwm', dest: '.stumpwm.d'}
+  tasks:
+    - name: Get all GitHub repos
+      uri:
+        url: "https://api.github.com/user/repos?per_page=100&affiliation=owner"
+        method: GET
+        status_code:
+          - 200
+          - 201
+          - 409
+        headers:
+          Content-Type: application/json
+          Authorization: "token {{token}}"
+      register: repos
+    - name: Print user repos
+      debug:
+        msg: "{{item.name}}"
+      loop: "{{repos.json}}"
+      loop_control:
+        label: "{{item.name}}"
+    - name: Cloning GitHub repos to {{dest}}
+      git:
+        repo: "git@github.com:{{user}}/{{item.name}}.git"
+        version: main
+        dest: "{{dest}}/{{item.name}}"
+        accept_hostkey: yes
+      loop: '{{repos.json}}'
+      loop_control:
+        label: "Cloning {{item.name}} to {{dest}}"
+    # - name: Symlink repos in {{dest}} to {{ansible_env.HOME}}
+    #   file:
+    #     src: "{{dest}}/{{item.src}}"
+    #     dest: "{{ansible_env.HOME}}/{{item.dest}}"
+    #     state: link
+    #     force: yes
+    #   loop: '{{links}}'

@@ -1,5 +1,5 @@
 - name: Install Emacs from Git
-  hosts: localhost
+  hosts: all
   vars:
     ver: '{{version | default("master") }}'
     src: '{{ansible_env.HOME}}/src'
