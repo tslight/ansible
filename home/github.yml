@@ -25,12 +25,12 @@
           Content-Type: application/json
           Authorization: "token {{token}}"
       register: repos
-    - name: Print user repos
-      debug:
-        msg: "{{item.name}}"
-      loop: "{{repos.json}}"
-      loop_control:
-        label: "{{item.name}}"
+    # - name: Print user repos
+    #   debug:
+    #     msg: "{{item.name}}"
+    #   loop: "{{repos.json}}"
+    #   loop_control:
+    #     label: "{{item.name}}"
     - name: Cloning GitHub repos to {{dest}}
       git:
         repo: "git@github.com:{{user}}/{{item.name}}.git"
@@ -40,10 +40,10 @@
       loop: '{{repos.json}}'
       loop_control:
         label: "Cloning {{item.name}} to {{dest}}"
-    # - name: Symlink repos in {{dest}} to {{ansible_env.HOME}}
-    #   file:
-    #     src: "{{dest}}/{{item.src}}"
-    #     dest: "{{ansible_env.HOME}}/{{item.dest}}"
-    #     state: link
-    #     force: yes
-    #   loop: '{{links}}'
+    - name: Symlink repos in {{dest}} to {{ansible_env.HOME}}
+      file:
+        src: "{{dest}}/{{item.src}}"
+        dest: "{{ansible_env.HOME}}/{{item.dest}}"
+        state: link
+        force: yes
+      loop: '{{links}}'

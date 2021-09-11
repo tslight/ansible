@@ -40,10 +40,10 @@
       loop: '{{projects.json}}'
       loop_control:
         label: "Cloning {{item.name}} to {{dest}}"
-    - name: Symlink repos in {{dest}} to {{ansible_env.HOME}}
-      file:
-        src: "{{dest}}/{{item.src}}"
-        dest: "{{ansible_env.HOME}}/{{item.dest}}"
-        state: link
-        force: yes
-      loop: '{{links}}'
+    # - name: Symlink repos in {{dest}} to {{ansible_env.HOME}}
+    #   file:
+    #     src: "{{dest}}/{{item.src}}"
+    #     dest: "{{ansible_env.HOME}}/{{item.dest}}"
+    #     state: link
+    #     force: yes
+    #   loop: '{{links}}'
