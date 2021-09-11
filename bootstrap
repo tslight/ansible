@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# bash <(curl -s https://gitlab.com/tslight/ansible/-/raw/main/bootstrap)
+# bash <(curl -s https://raw.githubusercontent.com/tslight/ansible/main/bootstrap)
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
@@ -151,9 +151,9 @@ install_deps() {
 
 clone_repos() {
     rm -rf /tmp/dotfiles
-    git clone https://gitlab.com/tslight/dotfiles /tmp/dotfiles && \
+    git clone https://github.com/tslight/dotfiles /tmp/dotfiles && \
         git -C /tmp/dotfiles remote remove origin && \
-        git -C /tmp/dotfiles remote add origin git@gitlab.com:tslight/dotfiles && \
+        git -C /tmp/dotfiles remote add origin git@github.com:tslight/dotfiles && \
         git -C /tmp/dotfiles remote -v && \
         rsync -ah /tmp/dotfiles/ $HOME && \
         chmod 700 $HOME/.ssh && chmod 600 $HOME/.ssh/* && \
@@ -161,7 +161,7 @@ clone_repos() {
         git -C $HOME branch --set-upstream-to=origin/main main && \
         git -C $HOME pull && \
         rm -rf /tmp/ansible && \
-        git clone git@gitlab.com:tslight/ansible /tmp/ansible && \
+        git clone git@github.com:tslight/ansible /tmp/ansible && \
         return 0 || return 1
 }
 
