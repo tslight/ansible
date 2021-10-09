@@ -224,7 +224,7 @@ interactive() {
 }
 
 if [ "$#" -gt 0 ]; then
-    while getopts ":a:i:h:cds" opt; do
+    while getopts ":a:i:cds" opt; do
         case ${opt} in
             a) install_deps && clone_repos && choose
                ;;
@@ -233,8 +233,6 @@ if [ "$#" -gt 0 ]; then
             c) clone_repos
                ;;
             d) install_deps
-               ;;
-            h) usage
                ;;
             s) choose
                ;;
