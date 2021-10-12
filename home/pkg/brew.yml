@@ -18,6 +18,7 @@ install:
 - tree
 - w3m
 - wget
+cask:
 - emacs-nightly
 - firefox
 - google-chrome

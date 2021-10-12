@@ -41,11 +41,15 @@
       name: brew
     when: ansible_pkg_mgr == 'homebrew'
   - name: Installing homebrew packages
-    # Update homebrew first and install formula foo with 'brew' in default path
     community.general.homebrew:
       name: "{{brew.install}}"
       state: present
       update_homebrew: yes
+    when: ansible_pkg_mgr == 'homebrew'
+  - name: Installing homebrew packages
+    community.general.homebrew_cask:
+      name: "{{brew.cask}}"
+      state: present
     when: ansible_pkg_mgr == 'homebrew'
 
   # DNF DISTROS
