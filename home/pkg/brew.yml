@@ -1,8 +1,11 @@
 install:
 - ansible
+- aspell
 - fortune
 - git
 - htop
+- hunspell
+- ispell
 - jq
 - lz4
 - lzip
@@ -13,7 +16,7 @@ install:
 - rsync
 - rtorrent
 - shellcheck
-- sl
+- texlive
 - tmux
 - tree
 - w3m
