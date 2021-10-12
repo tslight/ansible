@@ -122,27 +122,38 @@ get_selection() {
 }
 
 install_deps() {
-    source /etc/os-release
-    printf "${YEL}OS is $ID. Installing packages...${NC}\n"
-    case "$ID" in
-        arch*|manjaro*)
-            sudo pacman -Syu --noconfirm && \
-                sudo pacman -S --noconfirm --needed ansible cowsay git rsync openssh || \
-                    return 1
+    OS="$(uname)"
+    printf "${YEL}OS is $OS.${NC}\n"
+    case "$OS" in
+        Darwin)
+            brew install ansible cowsay git rsync || return 1
             ;;
-        debian|neon|ubuntu|raspbian)
-            sudo apt -y update && sudo apt -y upgrade && \
-                sudo apt -y install ansible cowsay git rsync openssh-client || \
+        Linux)
+            source /etc/os-release
+            printf "${YEL}Linux distribution is $ID.${NC}\n"
+            case "$ID" in
+                arch*|manjaro*)
+                    sudo pacman -Syu --noconfirm && \
+                    sudo pacman -S --noconfirm --needed ansible cowsay git rsync openssh || \
+                        return 1
+                ;;
+                debian|neon|ubuntu|raspbian)
+                    sudo apt -y update && sudo apt -y upgrade && \
+                        sudo apt -y install ansible cowsay git rsync openssh-client || \
+                        return 1
+                ;;
+                centos|fedora)
+                    sudo dnf upgrade && \
+                        sudo dnf -y install ansible cowsay git rsync openssh || \
+                        return 1
+                ;;
+                *)
+                    printf "${RED}$ID not supported.\n${NC}"
                     return 1
-            ;;
-        centos|fedora)
-            sudo dnf upgrade && \
-                sudo dnf -y install ansible cowsay git rsync openssh || \
-                    return 1
-            ;;
+                ;;
+            esac
         *)
-            printf "${RED}$ID not supported\n${NC}"
-            return 1
+            printf "${RED}$OS not supported.\n${NC}"
             ;;
     esac
     printf "${GRN}DONE!\n${NC}"
