@@ -46,7 +46,7 @@
       state: present
       update_homebrew: yes
     when: ansible_pkg_mgr == 'homebrew'
-  - name: Installing homebrew packages
+  - name: Installing homebrew cask applications
     community.general.homebrew_cask:
       name: "{{brew.cask}}"
       state: present
