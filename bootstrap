@@ -122,10 +122,20 @@ get_selection() {
 }
 
 install_deps() {
+    local BREWURL OS
+
+    BREWURL="https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
     OS="$(uname)"
     printf "${YEL}OS is $OS.${NC}\n"
+
     case "$OS" in
         Darwin)
+            if command -v brew &> /dev/null; then
+                printf "${GRN}Homebrew is already installed :-)\n${NC}"
+            else
+                printf "${YEL}Attempting to install Homebrew...\n${NC}"
+                /bin/bash -c "$(curl -fsSL "$BREWURL")" || return 1
+            fi
             brew install ansible cowsay git rsync || return 1
             ;;
         Linux)
@@ -148,13 +158,13 @@ install_deps() {
                             return 1
                     ;;
                 *)
-                    printf "${RED}$ID not supported.\n${NC}"
+                    printf "${RED}$ID is not supported.\n${NC}"
                     return 1
                     ;;
             esac
             ;;
         *)
-            printf "${RED}$OS not supported.\n${NC}"
+            printf "${RED}$OS is not supported.\n${NC}"
             ;;
     esac
     printf "${GRN}DONE!\n${NC}"
