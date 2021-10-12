@@ -152,6 +152,7 @@ install_deps() {
                     return 1
                 ;;
             esac
+            ;;
         *)
             printf "${RED}$OS not supported.\n${NC}"
             ;;
