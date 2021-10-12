@@ -1,6 +1,5 @@
 - name: Install and remove packages
-  hosts: localhost
-  connection: local
+  hosts: all
   tasks:
   - name: Print Distro information
     ansible.builtin.debug:
@@ -78,7 +77,6 @@
   - name: Installing dnf packages
     become: yes
     dnf:
-      update_cache: yes
       name: "{{rpm.install}}"
       state: latest
       install_weak_deps: false
