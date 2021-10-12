@@ -134,23 +134,23 @@ install_deps() {
             case "$ID" in
                 arch*|manjaro*)
                     sudo pacman -Syu --noconfirm && \
-                    sudo pacman -S --noconfirm --needed ansible cowsay git rsync openssh || \
-                        return 1
-                ;;
+                        sudo pacman -S --noconfirm --needed ansible cowsay git rsync openssh || \
+                            return 1
+                    ;;
                 debian|neon|ubuntu|raspbian)
                     sudo apt -y update && sudo apt -y upgrade && \
                         sudo apt -y install ansible cowsay git rsync openssh-client || \
-                        return 1
-                ;;
+                            return 1
+                    ;;
                 centos|fedora)
                     sudo dnf upgrade && \
                         sudo dnf -y install ansible cowsay git rsync openssh || \
-                        return 1
-                ;;
+                            return 1
+                    ;;
                 *)
                     printf "${RED}$ID not supported.\n${NC}"
                     return 1
-                ;;
+                    ;;
             esac
             ;;
         *)
