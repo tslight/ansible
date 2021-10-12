@@ -35,7 +35,7 @@
     when: ansible_pkg_mgr == 'apt'
 
   # HOMEBREW
-  - name: Load lists of homebrew packages to remove & install
+  - name: Load lists of homebrew packages to install
     include_vars:
       file: ./pkg/brew.yml
       name: brew
