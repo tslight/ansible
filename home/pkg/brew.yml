@@ -1,6 +1,9 @@
 install:
 - ansible
 - aspell
+- bash
+- cowsay
+- exiftool
 - fortune
 - git
 - htop
