@@ -32,6 +32,7 @@ install:
 - p7zip
 - powertop
 - psmisc
+- python3-pip
 - ranger
 - rsync
 - rtorrent

@@ -23,6 +23,7 @@ $(basename "$0") [-a] [-c] [-d] [-i] [-s]
 -d : Install necessary dependencies.
 -i : Run in interactive mode.
 -s : Choose ansible scripts to run.
+-f : Specify the path to the ansible script.
 "
 }
 
@@ -144,17 +145,33 @@ install_deps() {
             case "$ID" in
                 arch*|manjaro*)
                     sudo pacman -Syu --noconfirm && \
-                        sudo pacman -S --noconfirm --needed ansible cowsay git rsync openssh || \
+                        sudo pacman -S --noconfirm --needed \
+                             ansible \
+                             cowsay \
+                             git \
+                             rsync \
+                             openssh || \
                             return 1
                     ;;
                 debian|neon|ubuntu|raspbian)
                     sudo apt -y update && sudo apt -y upgrade && \
-                        sudo apt -y install ansible cowsay git rsync openssh-client || \
+                        sudo apt -y install \
+                             python-is-python3 \
+                             ansible \
+                             cowsay \
+                             git \
+                             rsync \
+                             openssh-client || \
                             return 1
                     ;;
                 centos|fedora)
                     sudo dnf upgrade && \
-                        sudo dnf -y install ansible cowsay git rsync openssh || \
+                        sudo dnf -y install \
+                             ansible \
+                             cowsay \
+                             git \
+                             rsync \
+                             openssh || \
                             return 1
                     ;;
                 *)
@@ -187,6 +204,17 @@ clone_repos() {
         return 0 || return 1
 }
 
+run_playbooks() {
+    local -a files=("$@")
+
+    for file in "${files[@]}"; do
+        printf "${YEL}Executing $file...\n${NC}"
+        ansible-playbook -i "$DIR/hosts.ini" "$file" \
+                         --extra-vars "ansible_become_pass=\"$PASS\""
+        printf "${GRN}Successfully executed $file :-)\n${NC}"
+    done
+}
+
 choose() {
     shopt -s globstar dotglob extglob nullglob
 
@@ -208,12 +236,7 @@ choose() {
                 clear
                 read -resp "Enter sudo password: " PASS
                 clear
-                for file in "${selected[@]}"; do
-                    printf "${YEL}Executing $file...\n${NC}"
-                    ansible-playbook -i "$DIR/hosts.ini" "$file" \
-                                     --extra-vars "ansible_become_pass=\"$PASS\""
-                    printf "${GRN}Successfully executed $file :-)\n${NC}"
-                done
+                run_playbooks "${selected[@]}"
             else
                 printf "${RED}Aborting!\n${NC}"
                 cowsay "Goodbye!"
@@ -246,7 +269,7 @@ interactive() {
 }
 
 if [ "$#" -gt 0 ]; then
-    while getopts ":a:i:cds" opt; do
+    while getopts ":a:f:i:cds" opt; do
         case ${opt} in
             a) install_deps && clone_repos && choose
                ;;
@@ -257,6 +280,8 @@ if [ "$#" -gt 0 ]; then
             d) install_deps
                ;;
             s) choose
+               ;;
+            f) shift 1 && run_playbooks "$@"
                ;;
             \?) usage && exit 1
                 ;;
