@@ -206,7 +206,8 @@ clone_repos() {
 
 run_playbooks() {
     local -a files=("$@")
-
+    read -resp "Enter sudo password: " PASS
+    clear
     for file in "${files[@]}"; do
         printf "${YEL}Executing $file...\n${NC}"
         ansible-playbook -i "$DIR/hosts.ini" "$file" \
@@ -233,8 +234,6 @@ choose() {
             printf '%s\n' "${selected[@]}"
             printf "\n"
             if ask "${YEL}Do you want to continue?${NC}"; then
-                clear
-                read -resp "Enter sudo password: " PASS
                 clear
                 run_playbooks "${selected[@]}"
             else
