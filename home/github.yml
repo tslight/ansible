@@ -7,7 +7,7 @@
   vars:
     user: "tslight"
     token: "{{ lookup('ini', 'token section=GitHub file=~/.gitforge.cfg') }}"
-    dest: "{{ansible_env.HOME}}/src/github/{{user}}"
+    dest: "{{ansible_env.HOME}}/src"
     links:
       - { src: 'bin', dest: 'bin'}
       - { src: 'ansible', dest: 'ansible'}
