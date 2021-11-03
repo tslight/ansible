@@ -40,13 +40,13 @@
       name: brew
     when: ansible_pkg_mgr == 'homebrew'
   - name: Installing homebrew packages
-    community.general.homebrew:
+    homebrew:
       name: "{{brew.install}}"
       state: present
       update_homebrew: yes
     when: ansible_pkg_mgr == 'homebrew'
   - name: Installing homebrew cask applications
-    community.general.homebrew_cask:
+    homebrew_cask:
       name: "{{brew.cask}}"
       state: present
     when: ansible_pkg_mgr == 'homebrew'

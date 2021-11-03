@@ -31,6 +31,7 @@ install:
 - perl-Image-ExifTool
 - powertop
 - psmisc
+- python3-pip
 - ranger
 - redhat-lsb
 - rsync
