@@ -25,9 +25,9 @@ install:
 - w3m
 - wget
 cask:
-- emacs-nightly
 - firefox
 - google-chrome
+- homebrew/cask-versions/emacs-nightly
 - iterm2
 - karabiner-elements
 - witch
