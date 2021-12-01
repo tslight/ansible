@@ -74,29 +74,13 @@
          KEYBOARD_KEY_700e0=leftmeta         # left  --> meta
          KEYBOARD_KEY_70050=leftmeta         # ctrl  --> meta
 
-  - name: Remap HP Probook 440 G7
+  - name: Remap HP Probook
     blockinfile:
       path: /etc/udev/hwdb.d/90-kbd.hwdb
       create: true
-      marker: "# {mark} HP Probook 440 G7"
+      marker: "# {mark} HP Probook"
       block: |+
-        evdev:atkbd:dmi:bvn*:bvr*:svnHP*:pnHP*ProBook*440*G7*
-         KEYBOARD_KEY_01=capslock         # esc   --> caps
-         KEYBOARD_KEY_3a=esc              # caps  --> esc
-         KEYBOARD_KEY_38=leftctrl         # alt   --> leftctrl
-         KEYBOARD_KEY_db=leftalt          # super --> leftalt
-         KEYBOARD_KEY_1d=leftmeta         # ctrl  --> super
-         KEYBOARD_KEY_b8=leftctrl         # altgr --> leftctrl
-         KEYBOARD_KEY_dd=leftalt          # ctrl  --> leftalt
-         KEYBOARD_KEY_9d=leftmeta         # left  --> rightmeta
-
-  - name: Remap HP Probook 430 G6
-    blockinfile:
-      path: /etc/udev/hwdb.d/90-kbd.hwdb
-      create: true
-      marker: "# {mark} HP Probook 430 G6"
-      block: |+
-        evdev:atkbd:dmi:bvn*:bvr*:svnHP*:pnHP*ProBook*430*G6*
+        evdev:atkbd:dmi:bvn*:bvr*:svnHP*:pnHP*ProBook*
          KEYBOARD_KEY_01=capslock         # esc   --> caps
          KEYBOARD_KEY_3a=esc              # caps  --> esc
          KEYBOARD_KEY_38=leftctrl         # alt   --> leftctrl
