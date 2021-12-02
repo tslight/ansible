@@ -23,13 +23,6 @@
           Authorization: "Bearer {{token}}"
       register: projects
       with_items: "{{gitlab_groups}}"
-    # - name: Print found projects
-    #   debug:
-    #     msg: "{{item.path_with_namespace}}"
-    #   # https://stackoverflow.com/a/64051981
-    #   loop: "{{ projects.results | map(attribute='json') | list | flatten }}"
-    #   loop_control:
-    #     label: "{{item.name}}"
     - name: Cloning GitLab group projects to {{dest}}
       git:
         repo: "git@gitlab.com:{{item.path_with_namespace}}.git"
@@ -39,3 +32,9 @@
       loop: "{{ projects.results | map(attribute='json') | list | flatten }}"
       loop_control:
         label: "Cloning {{item.name}} to {{dest}}/{{item.path_with_namespace}}"
+    - name: Symlink {{dest}} to {{ansible_env.HOME}}/oe
+      file:
+        src: "{{dest}}/oe-developers"
+        dest: "{{ansible_env.HOME}}/oe"
+        state: link
+        force: yes
