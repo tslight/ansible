@@ -1,8 +1,0 @@
-- name: Install Next Browser
-  hosts: localhost
-  connection: local
-  become: yes
-  tasks:
-  - name: Install a Next .deb package
-    apt:
-      deb: https://next.atlas.engineer/static/release/next_1.3.4_amd64.deb

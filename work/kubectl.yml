@@ -2,6 +2,7 @@
   hosts: all
   become: yes
   tasks:
+
   - name: Add an apt signing key for Kubernetes
     apt_key:
       url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
@@ -19,6 +20,7 @@
       state: present
       update_cache: yes
     when: ansible_pkg_mgr == 'apt'
+
   - name: Add /etc/yum.repos.d/kubernetes.repo
     copy:
       dest: /etc/yum.repos.d/kubernetes.repo

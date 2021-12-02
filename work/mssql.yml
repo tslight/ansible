@@ -7,7 +7,7 @@
   tasks:
   - name: Download msprod yum repo
     get_url:
-      url: https://packages.microsoft.com/config/rhel/7/prod.repo
+      url: https://packages.microsoft.com/config/rhel/8/prod.repo
       dest: /etc/yum.repos.d/msprod.repo
     when: ansible_pkg_mgr == 'dnf'
   - name: Installing dnf packages

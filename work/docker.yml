@@ -52,13 +52,13 @@
       warn: false
     when: ansible_pkg_mgr == 'dnf'
 
-  - name: Change Fedora release version
-    command:
-      # Temporary workaround when OS is too new
-      sed -i 's/\$releasever/31/g' /etc/yum.repos.d/docker-ce.repo
-    args:
-      warn: false
-    when: ansible_pkg_mgr == 'dnf'
+  # - name: Change Fedora release version
+  #   command:
+  #     # Temporary workaround when OS is too new
+  #     sed -i 's/\$releasever/31/g' /etc/yum.repos.d/docker-ce.repo
+  #   args:
+  #     warn: false
+  #   when: ansible_pkg_mgr == 'dnf'
 
   - name: Installing with dnf
     dnf:
@@ -68,9 +68,9 @@
         - docker-ce-cli
         - containerd.io
     when: ansible_pkg_mgr == 'dnf'
-  - name: Enable backward compatibility for cgroups on Fedora 31+
-    command:
-      grubby --update-kernel=ALL --args="systemd.unified_cgroup_hierarchy=0"
+  # - name: Enable backward compatibility for cgroups on Fedora 31+
+  #   command:
+  #     grubby --update-kernel=ALL --args="systemd.unified_cgroup_hierarchy=0"
     when:
       - ansible_pkg_mgr == 'dnf'
       - ansible_distribution_version >= '31'
@@ -88,11 +88,15 @@
       permanent: yes
       immediate: yes
       state: enabled
-    # shell: |
-    #   firewall-cmd --permanent --zone=trusted --change-interface=docker0
-    #   firewall-cmd --reload
-    #   systemctl restart firewalld
-    #   systemctl restart docker
+    when: ansible_distribution == 'Fedora' or ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+  - name: Configure firewalld to allow docker
+    shell: |
+      firewall-cmd --permanent --zone=trusted --change-interface=docker0
+      firewall-cmd --permanent --zone=docker --change-interface=docker0
+      firewall-cmd --reload
+      systemctl restart firewalld
+      systemctl restart docker
     when: ansible_distribution == 'Fedora' or ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
 
   - name: Start and enable docker service
