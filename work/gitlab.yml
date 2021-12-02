@@ -1,0 +1,41 @@
+- name: Clone GitLab group projects
+  hosts: all
+  vars:
+    token: "{{ lookup('ini', 'token section=GitLab file=~/.gitforge.cfg') }}"
+    baseurl: "https://gitlab.com/api/v4/groups"
+    slug: "/projects?include_subgroups=true&per_page=100"
+    dest: "{{ansible_env.HOME}}/src"
+    gitlab_groups:
+      - be
+      - ds
+  tasks:
+    - name: "Get all GitLab projects belonging to {{gitlab_groups}}"
+      uri:
+        url: "{{baseurl}}/{{'oe-developers'|urlencode}}%2F{{item}}/{{slug}}"
+        method: GET
+        validate_certs: no
+        status_code:
+          - 200
+          - 201
+          - 409
+        headers:
+          Content-Type: application/json
+          Authorization: "Bearer {{token}}"
+      register: projects
+      with_items: "{{gitlab_groups}}"
+    # - name: Print found projects
+    #   debug:
+    #     msg: "{{item.path_with_namespace}}"
+    #   # https://stackoverflow.com/a/64051981
+    #   loop: "{{ projects.results | map(attribute='json') | list | flatten }}"
+    #   loop_control:
+    #     label: "{{item.name}}"
+    - name: Cloning GitLab group projects to {{dest}}
+      git:
+        repo: "git@gitlab.com:{{item.path_with_namespace}}.git"
+        dest: "{{dest}}/{{item.path_with_namespace}}"
+        accept_hostkey: yes
+      # https://stackoverflow.com/a/64051981
+      loop: "{{ projects.results | map(attribute='json') | list | flatten }}"
+      loop_control:
+        label: "Cloning {{item.name}} to {{dest}}/{{item.path_with_namespace}}"
