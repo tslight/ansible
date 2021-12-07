@@ -8,6 +8,7 @@
     gitlab_groups:
       - be
       - ds
+      - fe
   tasks:
     - name: "Get all GitLab projects belonging to {{gitlab_groups}}"
       uri:

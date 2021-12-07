@@ -3,6 +3,14 @@
   connection: local
   become: yes
   tasks:
+  - name: Print Distro information
+    ansible.builtin.debug:
+      msg:
+        - "Ansible Distribution = {{ansible_distribution}}"
+        - "Ansible Distribution Version = {{ansible_distribution_version}}"
+        - "Ansible Distribution Release = {{ansible_distribution_release}}"
+        - "Ansible Package Manager = {{ansible_pkg_mgr}}"
+
   - name: Allow apt to use a repository over https
     apt:
       pkg:
@@ -22,7 +30,7 @@
     when: ansible_pkg_mgr == 'apt'
   - name: Adding azure-cli to apt sources list
     apt_repository:
-      repo: deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ focal main
+      repo: deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/  {{ansible_distribution_release}} main
       state: present
       filename: azure-cli
       update_cache: yes
