@@ -1,7 +1,7 @@
 - name: Install latest NodeJS using nvm
   hosts: localhost
   vars:
-    number: "{{version | default('0.35.3')}}"
+    number: "{{version | default('0.39.0')}}"
     ver: "{{'v' + number}}"
     url: https://raw.githubusercontent.com
     nvm_dir: "{{ansible_env.HOME}}/.nvm"
@@ -21,4 +21,5 @@
         export NVM_DIR="$HOME/.nvm" && \
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && \
         [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" && \
-        nvm install node && nvm use node
+        nvm install 16.13.1 && \
+        nvm alias default 16.13.1
