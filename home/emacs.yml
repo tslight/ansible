@@ -116,11 +116,11 @@
   - name: Run configure
     command: >
       ./configure chdir={{src}}/emacs-{{ver}}
+      --without-ns
+      --without-x
       --with-modules
-      --with-x-toolkit=lucid
-      --without-toolkit-scroll-bars
-      --with-xwidgets=no
       --with-native-compilation
+      --with-pgtk
     when: current.stdout != ver or frc == "true"
 
   - name: Get number of available cores
