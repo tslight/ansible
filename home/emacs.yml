@@ -118,6 +118,7 @@
       ./configure chdir={{src}}/emacs-{{ver}}
       --without-ns
       --without-x
+      --with-json
       --with-modules
       --with-native-compilation
       --with-pgtk
