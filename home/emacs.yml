@@ -49,6 +49,8 @@
         - libgccjit-10-dev
         - texlive
         - texlive-latex-extra
+        - libjansson4
+        - libjansson-dev
     when:
       - ansible_pkg_mgr == 'apt'
 
