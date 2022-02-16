@@ -4,7 +4,7 @@
   vars:
     go_version: "1.17"
     go_path: /usr/local
-    golangci-lint_version: "1.43.0"
+    golangcilint_version: "1.43.0"
     gotestsum_version: "1.7.0"
   tasks:
   - name: Delete old Go
@@ -27,7 +27,7 @@
         export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
   - name: Install Golang CI Lint tool
     unarchive:
-      src: "https://github.com/golangci/golangci-lint/releases/download/v{{golangci-lint_version}}/golangci-lint-{{golangci-lint_version}}-linux-amd64.tar.gz"
+      src: "https://github.com/golangci/golangci-lint/releases/download/v{{golangcilint_version}}/golangci-lint-{{golangcilint_version}}-linux-amd64.tar.gz"
       dest: /usr/local/bin
       remote_src: yes
       extra_opts:
