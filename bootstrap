@@ -135,7 +135,10 @@ install_deps() {
                 printf "${GRN}Homebrew is already installed :-)\n${NC}"
             else
                 printf "${YEL}Attempting to install Homebrew...\n${NC}"
-                /bin/bash -c "$(curl -fsSL "$BREWURL")" || return 1
+                /bin/bash -c "$(curl -fsSL "$BREWURL")" || \
+                    # https://nanxiao.me/en/fix-permission-denied-rb_file_s_symlink-error-of-installing-homebrew/
+                    sudo chown -R $(whoami) $(brew --prefix)/* || return 1
+                brew update --force || return 1
             fi
             brew install ansible cowsay git rsync || return 1
             ;;
