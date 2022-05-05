@@ -1,0 +1,31 @@
+- name: Install and remove packages
+  hosts: all
+  tasks:
+  - name: Installing homebrew packages
+    homebrew:
+      name:
+        - az
+        - jq
+        - kubectl
+      state: present
+    when: ansible_pkg_mgr == 'homebrew'
+  - name: Installing homebrew cask applications
+    homebrew_cask:
+      name:
+        - miniconda
+      state: present
+    when: ansible_pkg_mgr == 'homebrew'
+
+  - name: Add MSSQL repository to homebrew
+    homebrew_tap:
+      name: microsoft/mssql-release
+      url: 'https://github.com/Microsoft/homebrew-mssql-release'
+  - name: Installing MSSQL via homebrew
+    # No way to pass the ACCEPT_EULA var into the homebrew module sadly
+    # https://github.com/microsoft/homebrew-mssql-release/issues/8
+    shell: 'HOMEBREW_NO_ENV_FILTERING=1 ACCEPT_EULA=Y brew install msodbcsql mssql-tools'
+
+  - name: Configure your shell to use Conda's Python
+    shell: 'conda init "$(basename "${SHELL}")"'
+  - name: Downgrade Conda's default Python to 3.8
+    shell: 'conda install python\=3.8 -y'
