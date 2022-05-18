@@ -8,6 +8,7 @@
         - jq
         - kubectl
         - libomp
+        - wkhtmltopdf
       state: present
     when: ansible_pkg_mgr == 'homebrew'
   - name: Installing homebrew cask applications
