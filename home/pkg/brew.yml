@@ -25,10 +25,12 @@ install:
 - w3m
 - wget
 cask:
+- caffeine
+- clipy
 - firefox
 - google-chrome
 - homebrew/cask-versions/emacs-nightly
 - iterm2
 - karabiner-elements
+- middleclick
 - witch
-- caffeine
