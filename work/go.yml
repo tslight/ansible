@@ -6,14 +6,22 @@
     go_path: /usr/local
     golangcilint_version: "1.43.0"
     gotestsum_version: "1.7.0"
+    arch: "{{ 'arm64' if ansible_architecture == 'aarch64' else 'amd64' }}"
+    os: "{{ansible_os_family|lower}}"
+    url: "https://golang.org/dl/go{{go_version}}.{{os}}-{{arch}}.tar.gz"
   tasks:
+  - debug:
+      msg:
+        - "Architecture = {{arch}}"
+        - "Operating System = {{os}}"
+        - "URL = {{url}}"
   - name: Delete old Go
     file:
       path: '{{go_path}}/go'
       state: absent
   - name: Download & extract Go
     unarchive:
-      src: "https://golang.org/dl/go{{go_version}}.linux-amd64.tar.gz"
+      src: "{{url}}"
       dest: '{{go_path}}'
       remote_src: yes
   - name: Add Go to /etc/profile

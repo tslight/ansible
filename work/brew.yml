@@ -5,9 +5,12 @@
     homebrew:
       name:
         - az
+        - bash
+        - gnu-tar
         - jq
         - kubectl
         - libomp
+        - make
       state: present
     when: ansible_pkg_mgr == 'homebrew'
   - name: Installing homebrew cask applications

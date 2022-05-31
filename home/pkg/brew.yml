@@ -6,12 +6,14 @@ install:
 - exiftool
 - fortune
 - git
+- gnu-tar
 - htop
 - hunspell
 - ispell
 - jq
 - lz4
 - lzip
+- make
 - ncdu
 - nmap
 - p7zip
