@@ -3,12 +3,15 @@
   vars:
     version: "0.15.5"
     arch: "{{ 'arm64' if ansible_architecture == 'aarch64' else 'amd64' }}"
+    os: "{{ansible_os_family|lower}}"
   tasks:
   - debug:
-      msg: "arch is {{arch}}"
+      msg:
+        - "Architecture = {{arch}}"
+        - "Operating System = {{os}}"
   - name: Download & extract Terraform {{version}}
     become: yes
     unarchive:
-      src: 'https://releases.hashicorp.com/terraform/{{version}}/terraform_{{version}}_linux_{{arch}}.zip'
+      src: 'https://releases.hashicorp.com/terraform/{{version}}/terraform_{{version}}_{{os}}_{{arch}}.zip'
       dest: /usr/local/bin
       remote_src: yes
