@@ -177,6 +177,15 @@ install_deps() {
                              openssh || \
                             return 1
                     ;;
+                postmarketos)
+                    sudo apk update && sudo apk upgrade -a && \
+                        sudo apk add \
+                             ansible \
+                             git \
+                             rsync \
+                             openssh || \
+                            return 1
+                    ;;
                 *)
                     printf "${RED}$ID is not supported.\n${NC}"
                     return 1
@@ -241,11 +250,9 @@ choose() {
                 run_playbooks "${selected[@]}"
             else
                 printf "${RED}Aborting!\n${NC}"
-                cowsay "Goodbye!"
             fi
         else
             printf "${RED}Nothing selected!\n${NC}"
-            cowsay "Goodbye!"
         fi
     else
         printf "${RED}Can't find any ansible scripts in $DIR. Aborting :-(${NC}\n"
