@@ -9,6 +9,30 @@
         - "Ansible Distribution Release = {{ansible_distribution_release}}"
         - "Ansible Package Manager = {{ansible_pkg_mgr}}"
 
+  # APK DISTROS
+  - name: Load lists of apk packages to remove & install
+    include_vars:
+      file: ./pkg/apk.yml
+      name: apk
+    when: ansible_pkg_mgr == 'apk'
+  - name: Removing apk packages
+    become: yes
+    apk:
+      pkg: "{{apk.remove}}"
+      state: absent
+      purge: yes
+      autoremove: yes
+      autoclean: yes
+    when: ansible_pkg_mgr == 'apk'
+  - name: Installing apk packages
+    become: yes
+    apk:
+      update_cache: yes
+      pkg: "{{apk.install}}"
+      state: latest
+      install_recommends: no
+    when: ansible_pkg_mgr == 'apk'
+
   # APT DISTROS
   - name: Load lists of apt packages to remove & install
     include_vars:

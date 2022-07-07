@@ -4,13 +4,15 @@
   - name: Installing homebrew packages
     homebrew:
       name:
-        - az
+        - azure-cli
         - bash
+        - gnu-sed
         - gnu-tar
         - jq
         - kubectl
         - libomp
         - make
+        - pkill
       state: present
     when: ansible_pkg_mgr == 'homebrew'
   - name: Installing homebrew cask applications
@@ -21,6 +23,17 @@
         - wkhtmltopdf
       state: present
     when: ansible_pkg_mgr == 'homebrew'
+
+  - name: Add GNU utils to $PATH
+    blockinfile:
+      path: "{{ansible_env.HOME}}/.profile"
+      create: yes
+      backup: yes
+      marker: "# {mark} GNU utils config"
+      block: |
+        export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
+        export PATH="/usr/local/opt/gnu-tar/libexec/gnubin:$PATH"
+        export PATH="/usr/local/opt/make/libexec/gnubin:$PATH"
 
   - name: Add MSSQL repository to homebrew
     homebrew_tap:
