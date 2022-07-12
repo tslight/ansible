@@ -25,7 +25,8 @@
       remote_src: yes
   - name: Add Go to /etc/profile
     blockinfile:
-      path: /etc/profile
+      path: "{{ansible_env.HOME}}/.profile"
+      create: yes
       backup: yes
       marker: "# {mark} Golang config"
       block: |
@@ -44,3 +45,7 @@
       src: "https://github.com/gotestyourself/gotestsum/releases/download/v{{gotestsum_version}}/gotestsum_{{gotestsum_version}}_{{os}}_{{arch}}.tar.gz"
       dest: /usr/local/bin
       remote_src: yes
+  - name: Install gopls
+    shell: |
+      source "$HOME/.profile"
+      go install golang.org/x/tools/gopls@latest
