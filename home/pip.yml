@@ -10,6 +10,7 @@
         - pyflakes
         - setuptools
         - twine
+        - python-lsp-server
       state: present
       executable: pip3
       extra_args: --user
