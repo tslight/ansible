@@ -4,9 +4,11 @@ install:
 - bash
 - cowsay
 - exiftool
+- ffmpeg
 - fortune
 - git
 - gnu-tar
+- gopls
 - htop
 - hunspell
 - ispell
@@ -26,6 +28,7 @@ install:
 - tree
 - w3m
 - wget
+- youtube-dl
 cask:
 - caffeine
 - clipy
