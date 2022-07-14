@@ -26,6 +26,7 @@ install:
 - mg
 - mlocate
 - ncdu
+- neovim
 - net-tools
 - netcat-openbsd
 - nmap
