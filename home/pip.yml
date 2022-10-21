@@ -19,7 +19,6 @@
       paths: '{{ansible_env.HOME}}/src'
       excludes:
         - '*/\.*'
-        - 'oe*/*'
       hidden: no
       patterns: 'setup.py'
       recurse: yes

@@ -13,6 +13,7 @@
         - libomp
         - make
         - pkill
+        - node@16
       state: present
     when: ansible_pkg_mgr == 'homebrew'
   - name: Installing homebrew cask applications

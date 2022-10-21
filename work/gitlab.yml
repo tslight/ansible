@@ -4,12 +4,17 @@
     token: "{{ lookup('ini', 'token section=GitLab file=~/.gitforge.cfg') }}"
     baseurl: "https://gitlab.com/api/v4/groups"
     slug: "/projects?include_subgroups=true&per_page=100"
-    dest: "{{ansible_env.HOME}}/src"
+    dest: "{{ansible_env.HOME}}"
     gitlab_groups:
       - be
       - ds
       - fe
   tasks:
+    - name: "Create {{dest}} if it does not exist"
+      ansible.builtin.file:
+        path: {{dest}}
+        state: directory
+        mode: '0755'
     - name: "Get all GitLab projects belonging to {{gitlab_groups}}"
       uri:
         url: "{{baseurl}}/{{'oe-developers'|urlencode}}%2F{{item}}/{{slug}}"
@@ -33,9 +38,3 @@
       loop: "{{ projects.results | map(attribute='json') | list | flatten }}"
       loop_control:
         label: "Cloning {{item.name}} to {{dest}}/{{item.path_with_namespace}}"
-    - name: Symlink {{dest}} to {{ansible_env.HOME}}/oe
-      file:
-        src: "{{dest}}/oe-developers"
-        dest: "{{ansible_env.HOME}}/oe"
-        state: link
-        force: yes
