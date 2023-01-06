@@ -3,7 +3,9 @@ install:
 - aspell
 - bash
 - cowsay
+- exa
 - exiftool
+- fd
 - ffmpeg
 - fortune
 - git
@@ -20,6 +22,7 @@ install:
 - nmap
 - p7zip
 - ranger
+- ripgrep
 - rsync
 - rtorrent
 - shellcheck
