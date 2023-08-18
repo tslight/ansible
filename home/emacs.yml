@@ -46,7 +46,7 @@
         - imagemagick
         - ispell
         - libgccjit0
-        - libgccjit-10-dev
+        - libgccjit-12-dev
         - texlive
         - texlive-latex-extra
         - libjansson4
