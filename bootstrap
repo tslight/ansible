@@ -142,6 +142,12 @@ install_deps() {
             fi
             brew install ansible cowsay git rsync || return 1
             ;;
+        FreeBSD)
+            doas pkg install -y ansible cowsay git rsync || return 1
+            ;;
+        OpenBSD)
+            doas pkg_add -y ansible cowsay git rsync || return 1
+            ;;
         Linux)
             source /etc/os-release
             printf "${YEL}Linux distribution is $ID.${NC}\n"
