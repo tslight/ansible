@@ -146,7 +146,7 @@ install_deps() {
             sudo pkg install -y py39-ansible cowsay git rsync || return 1
             ;;
         OpenBSD)
-            doas pkg_add -y ansible cowsay git rsync || return 1
+            doas pkg_add ansible cowsay git rsync || return 1
             ;;
         Linux)
             source /etc/os-release
