@@ -183,6 +183,9 @@ install_deps() {
                              openssh || \
                             return 1
                     ;;
+                nixos)
+                    printf "${YEL}Running on NixOS. Please ensure you have the deps in your nix config...${NC}"
+                    ;;
                 postmarketos)
                     sudo apk update && sudo apk upgrade -a && \
                         sudo apk add \
