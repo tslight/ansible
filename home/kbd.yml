@@ -170,13 +170,13 @@
         KEYBOARD_KEY_9d=leftmeta
         KEYBOARD_KEY_1d=leftmeta
 
-  - name: Remap ThinkPad T13
+  - name: Remap ThinkPad X13
     blockinfile:
       path: /etc/udev/hwdb.d/90-kbd.hwdb
       create: true
-      marker: "# {mark} ThinkPad T14"
+      marker: "# {mark} ThinkPad X13"
       block: |+
-       evdev:atkbd:dmi:bvn*:bvr*:svnLENOVO*:pvrThinkPadT13*
+       evdev:atkbd:dmi:bvn*:bvr*:svnLENOVO*:pvrThinkPadX13*
         KEYBOARD_KEY_01=capslock
         KEYBOARD_KEY_3a=esc
         KEYBOARD_KEY_b8=leftctrl
