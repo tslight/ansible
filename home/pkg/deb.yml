@@ -14,7 +14,7 @@ install:
 - ed
 - evtest
 - fonts-terminus
-- fortunes-off
+- fortunes
 - gdebi-core
 - git
 - htop
