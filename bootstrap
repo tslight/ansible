@@ -173,7 +173,7 @@ install_deps() {
                              openssh-client || \
                             return 1
                     ;;
-                centos|fedora)
+                centos|fedora*)
                     sudo dnf upgrade && \
                         sudo dnf -y install \
                              ansible \
