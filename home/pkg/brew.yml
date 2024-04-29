@@ -3,7 +3,6 @@ install:
 - aspell
 - bash
 - cowsay
-- exa
 - exiftool
 - fd
 - ffmpeg
