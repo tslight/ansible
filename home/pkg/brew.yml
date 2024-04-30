@@ -32,11 +32,11 @@ install:
 - wget
 - youtube-dl
 cask:
+- alt-tab
 - caffeine
 - clipy
 - firefox
 - google-chrome
-- homebrew/cask-versions/emacs-nightly
-- iterm2
+- emacs-nightly
+- kitty
 - karabiner-elements
-- middleclick
