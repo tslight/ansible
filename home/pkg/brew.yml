@@ -37,6 +37,6 @@ cask:
 - clipy
 - firefox
 - google-chrome
-- emacs-nightly
+- emacs@nightly
 - kitty
 - karabiner-elements
