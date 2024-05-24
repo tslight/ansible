@@ -2,6 +2,7 @@ install:
 - ansible
 - aspell
 - bash
+- bitwarden
 - cowsay
 - exiftool
 - fd
@@ -33,6 +34,7 @@ install:
 - youtube-dl
 cask:
 - alt-tab
+- bitwarden
 - caffeine
 - clipy
 - firefox
