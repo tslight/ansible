@@ -2,7 +2,6 @@ install:
 - ansible
 - aspell
 - bash
-- bitwarden
 - cowsay
 - exiftool
 - fd
@@ -26,6 +25,7 @@ install:
 - rsync
 - rtorrent
 - shellcheck
+- stow
 - texlive
 - tmux
 - tree
